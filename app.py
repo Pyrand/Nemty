@@ -22,6 +22,17 @@ def chat():
     global chat_history
     user_input = request.json.get("message")
 
+    if not chat_history:
+        chat_history.append({
+            "role": "system",
+            "content": (
+                "You are an experienced, friendly, and knowledgeable **travel advisor**. "
+                "Based on the user's travel preferences, budget, and interests, you suggest cities, countries, activities, flights, and hotels. "
+                "Your responses should be clear, inspiring, and helpful. "
+                "Ask questions to better understand what the user wants."
+            )
+        })
+
     chat_history.append({"role": "user", "content": user_input})
 
     try:
