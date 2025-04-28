@@ -57,15 +57,27 @@ h2 {
     font-style: italic;
 }
 
-/* Markdown destekli stiller */
+.ai li {
+    margin-bottom: 6px;
+}
+
+.ai h3 {
+    margin-top: 12px;
+    margin-bottom: 12px;
+    font-size: 18px;
+    font-weight: 600;
+    color: #4a90e2;
+}
+
 .ai p {
-    margin: 6px 0;
+    margin-bottom: 8px;
 }
 
 .ai ul {
+    margin-bottom: 10px;
     padding-left: 20px;
-    margin: 8px 0;
 }
+
 
 .ai strong, .ai b {
     font-weight: bold;

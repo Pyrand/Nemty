@@ -45,7 +45,7 @@ def fetch_places_for_city(city_name, country, lat, lon, category, radius=10000, 
         if not xid:
             continue
 
-        time.sleep(1.2)
+        time.sleep(1.0)
         detail_url = f"https://api.opentripmap.com/0.1/en/places/xid/{xid}?apikey={OTM_API_KEY}"
         detail_resp = requests.get(detail_url).json()
 

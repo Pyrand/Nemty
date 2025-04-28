@@ -57,12 +57,15 @@ def fetch_from_opentripmap(city_preference, category_preference):
 def get_recommended_places(city_preference=None, category_preference=None):
     results = query_local_database(city_preference, category_preference)
 
-    if not results:
+    if results:
+        print(f"✅ Veritabanından veri çekildi: {city_preference} / {category_preference}")
+    else:
         print("🌐 Veritabanında bulunamadı, API'den çekiliyor...")
         fetch_from_opentripmap(city_preference, category_preference)
         results = query_local_database(city_preference, category_preference)
 
-    return results[:2]
+    return results
+
 
 def create_completion(messages, tools=None, tool_choice=None):
     params = {
@@ -95,9 +98,14 @@ def chat():
             "role": "system",
             "content": (
                 "You are a helpful and concise travel assistant. "
-                "Infer vacation type and city if possible. "
-                "Use get_recommended_places(city, category) only when confident. "
-                "Focus on short, useful suggestions."
+                "The user may describe their vacation preferences in any language. "
+                "You must infer the city and the vacation category, and internally translate only the city name and category name into English for database function calls. "
+                "Your responses to the user must always remain in the same language the user used. "
+                "When you receive results from the get_recommended_places function, you must prioritize suggesting places from that list. "
+                "If the number of places from the database/API is insufficient to fully cover the user's request (e.g., building a multi-day travel plan), "
+                "you are allowed to supplement your response by suggesting additional places based on your own knowledge of the city and category. "
+                "If no places are available at all, you may politely inform the user that no suggestions were found. "
+                "Focus on creating complete and helpful travel suggestions without overexplaining."
             )
         })
 
