@@ -1,26 +1,33 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, session
+from flask_session import Session
 from openai import OpenAI
 import os
 import sqlite3
+import json
 from dotenv import load_dotenv
+import fetch_otm_data
 
 load_dotenv()
 
+# OpenAI ayarı
 api_key = os.getenv("OPENAI_API_KEY")
 client = OpenAI(api_key=api_key)
 
+# Flask ayarı
 app = Flask(__name__)
-chat_history = []
+app.config["SESSION_TYPE"] = "filesystem"
+Session(app)
 
-def get_recommended_places(city_preference=None, category_preference=None):
-    import fetch_otm_data  # Dinamik çağır, çünkü bazen Flask içinde sorun çıkabiliyor
+# Yardımcı fonksiyonlar
+def print_error(e):
+    print(f"❌ Hata: {e}")
 
+def query_local_database(city_preference=None, category_preference=None):
     conn = sqlite3.connect("destinations.db")
     cursor = conn.cursor()
 
     query = "SELECT name, city, description FROM places WHERE 1=1"
     params = []
-
     if city_preference:
         query += " AND city LIKE ?"
         params.append(f"%{city_preference}%")
@@ -30,64 +37,74 @@ def get_recommended_places(city_preference=None, category_preference=None):
 
     cursor.execute(query, params)
     results = cursor.fetchall()
+    conn.close()
+
+    return results
+
+def fetch_from_opentripmap(city_preference, category_preference):
+    try:
+        with open("world_cities.json", "r", encoding="utf-8") as f:
+            cities = json.load(f)
+
+        match = next((c for c in cities if c["city"].lower() == city_preference.lower()), None)
+        if match:
+            fetch_otm_data.fetch_places_for_city(
+                match["city"], match["country"], match["lat"], match["lon"], category_preference
+            )
+    except Exception as e:
+        print_error(e)
+
+def get_recommended_places(city_preference=None, category_preference=None):
+    results = query_local_database(city_preference, category_preference)
 
     if not results:
-        # Eğer sonuç yoksa OpenTripMap'ten çek
-        print("🌐 Veritabanında sonuç bulunamadı, API'den çekiliyor...")
+        print("🌐 Veritabanında bulunamadı, API'den çekiliyor...")
+        fetch_from_opentripmap(city_preference, category_preference)
+        results = query_local_database(city_preference, category_preference)
 
-        # Şehir bilgisi (enlem-boylam) world_cities.json içinden bulunmalı
-        try:
-            import json
-            with open("world_cities.json", "r", encoding="utf-8") as f:
-                cities = json.load(f)
-
-            match = next((c for c in cities if c["city"].lower() == city_preference.lower()), None)
-            if match:
-                fetch_otm_data.fetch_places_for_city(
-                    match["city"], match["country"], match["lat"], match["lon"], category_preference
-                )
-
-                # Tekrar veri tabanını sorgula
-                cursor.execute(query, params)
-                results = cursor.fetchall()
-
-        except Exception as e:
-            print(f"❌ API çekme hatası: {e}")
-
-    conn.close()
     return results[:2]
 
+def create_completion(messages, tools=None, tool_choice=None):
+    params = {
+        "model": "gpt-4o",
+        "messages": messages
+    }
+    if tools is not None:
+        params["tools"] = tools
+    if tool_choice is not None and tools is not None:
+        params["tool_choice"] = tool_choice
 
+    return client.chat.completions.create(**params)
+
+# Routes
 @app.route("/")
 def index():
-    global chat_history
-    chat_history = []
+    session["chat_history"] = []
     return render_template("index.html")
 
 @app.route("/chat", methods=["POST"])
 def chat():
-    global chat_history
     user_input = request.json.get("message")
+    if "chat_history" not in session:
+        session["chat_history"] = []
+
+    chat_history = session["chat_history"]
 
     if not chat_history:
         chat_history.append({
             "role": "system",
             "content": (
                 "You are a helpful and concise travel assistant. "
-                "The user may describe their vacation preferences in any way. "
-                "Try to infer the vacation type (nature, beach, culture, food, religion, architecture, etc.) and location if possible. "
-                "You can use the get_recommended_places(city, category) function to look into a travel database if it makes sense, "
-                "but you are not required to do so. Only use it if you are confident that a location and category can be matched. "
-                "Avoid repeating results or overexplaining. Focus on short, useful suggestions. "
-                "Categories available in the database include: natural, cultural, beaches, historic, religion, architecture, foods, museums, sport, amusements."
+                "Infer vacation type and city if possible. "
+                "Use get_recommended_places(city, category) only when confident. "
+                "Focus on short, useful suggestions."
             )
         })
 
     chat_history.append({"role": "user", "content": user_input})
 
     try:
-        completion = client.chat.completions.create(
-            model="gpt-4o",
+        completion = create_completion(
             messages=chat_history,
             tools=[{
                 "type": "function",
@@ -109,31 +126,17 @@ def chat():
 
         response_msg = completion.choices[0].message
 
-        # Eğer AI fonksiyonu çağırmak istiyorsa:
         if response_msg.tool_calls:
             for call in response_msg.tool_calls:
                 if call.function.name == "get_recommended_places":
-                    args = call.function.arguments
-                    import json
-                    args = json.loads(args)
+                    args = json.loads(call.function.arguments)
                     result = get_recommended_places(**args)
 
-                    if result:
-                        reply = "\n".join([f"- {name} ({city}): {desc}" for name, city, desc in result])
-                    else:
-                        reply = "Veritabanında uygun sonuç bulunamadı."
+                    reply = "\n".join([f"- {name} ({city}): {desc}" for name, city, desc in result]) if result else "Veritabanında uygun sonuç bulunamadı."
 
-                    chat_history.append({
-                        "role": "function",
-                        "name": "get_recommended_places",
-                        "content": reply
-                    })
+                    chat_history.append({"role": "function", "name": "get_recommended_places", "content": reply})
 
-                    # Fonksiyon yanıtını tekrar modelin yorumlaması için gönder
-                    completion = client.chat.completions.create(
-                        model="gpt-4o",
-                        messages=chat_history
-                    )
+                    completion = create_completion(messages=chat_history)
                     ai_reply = completion.choices[0].message.content
                     break
         else:
@@ -143,16 +146,13 @@ def chat():
         ai_reply = f"Hata oluştu: {e}"
 
     chat_history.append({"role": "assistant", "content": ai_reply})
+    session["chat_history"] = chat_history
 
-    return jsonify({
-        "response": ai_reply,
-        "history": chat_history
-    })
+    return jsonify({"response": ai_reply, "history": chat_history})
 
 @app.route("/reset", methods=["GET"])
 def reset():
-    global chat_history
-    chat_history = []
+    session.pop("chat_history", None)
     return jsonify({"status": "reset"})
 
 if __name__ == "__main__":
