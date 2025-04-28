@@ -1,0 +1,102 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f2f5f9;
+    max-width: 600px;
+    margin: auto;
+    padding: 40px 20px;
+    color: #333;
+}
+
+h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-weight: 600;
+    color: #4a90e2;
+}
+
+.chat-box {
+    border-radius: 10px;
+    padding: 15px;
+    max-height: 500px;
+    overflow-y: auto;
+    background-color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    margin-bottom: 15px;
+}
+
+.user, .ai {
+    padding: 10px 14px;
+    border-radius: 12px;
+    max-width: 80%;
+    line-height: 1.6;
+    font-size: 14px;
+    white-space: normal;
+    word-wrap: break-word;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+}
+
+.user {
+    background-color: #d2e9ff;
+    align-self: flex-end;
+    text-align: right;
+}
+
+.ai {
+    background-color: #e4f7d9;
+    align-self: flex-start;
+    text-align: left;
+}
+
+.ai em {
+    color: #777;
+    font-style: italic;
+}
+
+/* Markdown destekli stiller */
+.ai p {
+    margin: 6px 0;
+}
+
+.ai ul {
+    padding-left: 20px;
+    margin: 8px 0;
+}
+
+.ai strong, .ai b {
+    font-weight: bold;
+}
+
+/* Input ve butonlar */
+form {
+    display: flex;
+    gap: 10px;
+}
+
+input#message {
+    flex: 1;
+    padding: 10px 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    outline: none;
+    font-size: 14px;
+}
+
+button[type="submit"], button[onclick="resetChat()"] {
+    background-color: #4a90e2;
+    color: white;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button[type="submit"]:hover, button[onclick="resetChat()"]:hover {
+    background-color: #3c7bcc;
+}
