@@ -6,21 +6,26 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
   <script defer src="{{ url_for('static', filename='script.js') }}"></script>
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-
 </head>
 <body>
   <h2>Nemty</h2>
 
+  <!-- Sabit sağ üst köşe kutu -->
+  <div id="flights-box">
+    <strong>✈️ Uçuş Bilgileri</strong>
+    <div id="flight-results"></div>
+  </div>
+
+  <!-- Chat ekranı -->
   <div class="chat-box"></div>
 
-    <form onsubmit="sendMessage(event)">
-        <input id="message" type="text" placeholder="Mesajınızı yazın..." required>
+  <!-- Mesaj gönderme formu -->
+  <form onsubmit="sendMessage(event)">
+    <input id="message" type="text" placeholder="Mesajınızı yazın..." required>
+    <button type="submit">Gönder</button>
+  </form>
 
-        
-        <button type="submit">Gönder</button>
-    </form>
-
-    <button onclick="resetChat()">Konuşmayı Sıfırla</button>
-
+  <!-- Reset butonu -->
+  <button onclick="resetChat()">Konuşmayı Sıfırla</button>
 </body>
 </html>

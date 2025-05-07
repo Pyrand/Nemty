@@ -1,85 +1,18 @@
 from flask import Flask, render_template, request, jsonify, session
 from flask_session import Session
-from openai import OpenAI
 import os
-import sqlite3
-import json
 from dotenv import load_dotenv
-import fetch_otm_data
+from modules.helpers import print_error
+from modules.database import query_local_database, fetch_from_opentripmap, get_recommended_places
+from modules.ai_tools import client, create_completion
+from modules.flights import get_flights_by_city_arrival
 
 load_dotenv()
 
-# OpenAI ayarı
-api_key = os.getenv("OPENAI_API_KEY")
-client = OpenAI(api_key=api_key)
-
-# Flask ayarı
 app = Flask(__name__)
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
-# Yardımcı fonksiyonlar
-def print_error(e):
-    print(f"❌ Hata: {e}")
-
-def query_local_database(city_preference=None, category_preference=None):
-    conn = sqlite3.connect("destinations.db")
-    cursor = conn.cursor()
-
-    query = "SELECT name, city, description FROM places WHERE 1=1"
-    params = []
-    if city_preference:
-        query += " AND city LIKE ?"
-        params.append(f"%{city_preference}%")
-    if category_preference:
-        query += " AND category LIKE ?"
-        params.append(f"%{category_preference}%")
-
-    cursor.execute(query, params)
-    results = cursor.fetchall()
-    conn.close()
-
-    return results
-
-def fetch_from_opentripmap(city_preference, category_preference):
-    try:
-        with open("world_cities.json", "r", encoding="utf-8") as f:
-            cities = json.load(f)
-
-        match = next((c for c in cities if c["city"].lower() == city_preference.lower()), None)
-        if match:
-            fetch_otm_data.fetch_places_for_city(
-                match["city"], match["country"], match["lat"], match["lon"], category_preference
-            )
-    except Exception as e:
-        print_error(e)
-
-def get_recommended_places(city_preference=None, category_preference=None):
-    results = query_local_database(city_preference, category_preference)
-
-    if results:
-        print(f"✅ Veritabanından veri çekildi: {city_preference} / {category_preference}")
-    else:
-        print("🌐 Veritabanında bulunamadı, API'den çekiliyor...")
-        fetch_from_opentripmap(city_preference, category_preference)
-        results = query_local_database(city_preference, category_preference)
-
-    return results
-
-
-def create_completion(messages, tools=None, tool_choice=None):
-    params = {
-        "model": "gpt-4o",
-        "messages": messages
-    }
-    if tools is not None:
-        params["tools"] = tools
-    if tool_choice is not None and tools is not None:
-        params["tool_choice"] = tool_choice
-
-    return client.chat.completions.create(**params)
-
-# Routes
 @app.route("/")
 def index():
     session["chat_history"] = []
@@ -111,6 +44,9 @@ def chat():
 
     chat_history.append({"role": "user", "content": user_input})
 
+    ai_reply = ""
+    flight_data = []
+
     try:
         completion = create_completion(
             messages=chat_history,
@@ -137,6 +73,7 @@ def chat():
         if response_msg.tool_calls:
             for call in response_msg.tool_calls:
                 if call.function.name == "get_recommended_places":
+                    import json
                     args = json.loads(call.function.arguments)
                     result = get_recommended_places(**args)
 
@@ -144,8 +81,12 @@ def chat():
 
                     chat_history.append({"role": "function", "name": "get_recommended_places", "content": reply})
 
+                    # AI cevabını yeniden oluştur
                     completion = create_completion(messages=chat_history)
                     ai_reply = completion.choices[0].message.content
+
+                    # Uçuş verisini çek (örnek: İstanbul'dan önerilen şehre)
+                    flight_data = get_flights_by_city_arrival(args.get("city_preference", ""))
                     break
         else:
             ai_reply = response_msg.content
@@ -156,7 +97,7 @@ def chat():
     chat_history.append({"role": "assistant", "content": ai_reply})
     session["chat_history"] = chat_history
 
-    return jsonify({"response": ai_reply, "history": chat_history})
+    return jsonify({"response": ai_reply, "history": chat_history, "flights": flight_data})
 
 @app.route("/reset", methods=["GET"])
 def reset():

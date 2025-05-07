@@ -7,7 +7,6 @@ async function sendMessage(event) {
     addMessageToChat("user", message);
     input.value = "";
   
-    // Yazıyor... mesajı ekle
     const chatBox = document.querySelector(".chat-box");
     const loadingMsg = document.createElement("div");
     loadingMsg.className = "ai";
@@ -26,19 +25,39 @@ async function sendMessage(event) {
       });
   
       const data = await response.json();
+      if (data.flights) {
+        showFlights(data.flights);
+      }
   
       // loading mesajını kaldır
       loadingMsg.remove();
   
       addMessageToChat("ai", data.response);
+
+      if (data.flights) {
+        const flightBox = document.getElementById("flight-results");
+        flightBox.innerHTML = "";
+      
+        if (data.flights.length === 0) {
+          flightBox.textContent = "Uçuş bulunamadı.";
+        } else {
+          const ul = document.createElement("ul");
+          data.flights.forEach(f => {
+            const li = document.createElement("li");
+            li.textContent = f;
+            ul.appendChild(li);
+          });
+          flightBox.appendChild(ul);
+        }
+      }
+      
+
     } catch (error) {
       loadingMsg.innerHTML = "🤖 <br><em>Bir hata oluştu!</em>";
     }
   }
-  
-  
 
-
+  
   function addMessageToChat(role, content) {
     const chatBox = document.querySelector(".chat-box");
     const msg = document.createElement("div");
@@ -59,4 +78,28 @@ async function sendMessage(event) {
     await fetch("/reset");
     document.querySelector(".chat-box").innerHTML = "";
   }
+
+  async function showFlights() {
+    const res = await fetch("/flights");
+    const data = await res.json();
+
+    const box = document.getElementById("flight-results");
+    box.innerHTML = "";
+
+    if (!data.flights || data.flights.length === 0) {
+        box.textContent = "Uçuş bulunamadı.";
+        return;
+    }
+
+    const ul = document.createElement("ul");
+    data.flights.forEach(flight => {
+        const li = document.createElement("li");
+        li.textContent = flight;
+        ul.appendChild(li);
+    });
+    box.appendChild(ul);
+}
+
+//window.addEventListener("DOMContentLoaded", showFlights);
+
   
