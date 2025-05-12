@@ -5,7 +5,9 @@ from dotenv import load_dotenv
 from modules.helpers import print_error
 from modules.database import query_local_database, fetch_from_opentripmap, get_recommended_places
 from modules.ai_tools import client, create_completion
-from modules.flights import get_flights_by_city_arrival
+from modules.flights import get_flights_by_cities
+from modules.helpers import print_error
+
 
 load_dotenv()
 
@@ -32,11 +34,13 @@ def chat():
             "content": (
                 "You are a helpful and concise travel assistant. "
                 "The user may describe their vacation preferences in any language. "
-                "You must infer the city and the vacation category, and internally translate only the city name and category name into English for database function calls. "
+                "You must always translate city names into English before using them in function calls or database lookups."
+                "Always extract both 'from_city' (departure city) and 'city_preference' (destination). These must be present in every call to the 'get_recommended_places' function. If they are not obvious, ask the user or make a reasonable guess."
+                "You must always translate city names like from_city and city_preference into English before passing them to any function call or database query."
                 "Your responses to the user must always remain in the same language the user used. "
                 "When you receive results from the get_recommended_places function, you must prioritize suggesting places from that list. "
                 "If the number of places from the database/API is insufficient to fully cover the user's request (e.g., building a multi-day travel plan), "
-                "you are allowed to supplement your response by suggesting additional places based on your own knowledge of the city and category. "
+                "You are allowed to supplement your response by suggesting additional places based on your own knowledge of the city and category. "
                 "If no places are available at all, you may politely inform the user that no suggestions were found. "
                 "Focus on creating complete and helpful travel suggestions without overexplaining."
             )
@@ -58,7 +62,8 @@ def chat():
                     "parameters": {
                         "type": "object",
                         "properties": {
-                            "city_preference": {"type": "string", "description": "City name"},
+                            "from_city": {"type": "string", "description": "Departure city"},
+                            "city_preference": {"type": "string", "description": "Destination city"},
                             "category_preference": {"type": "string", "description": "Category like natural, cultural, etc."}
                         },
                         "required": ["city_preference", "category_preference"]
@@ -75,18 +80,24 @@ def chat():
                 if call.function.name == "get_recommended_places":
                     import json
                     args = json.loads(call.function.arguments)
-                    result = get_recommended_places(**args)
+
+                    from_city = args.get("from_city", "").strip()
+                    to_city = args.get("city_preference", "").strip()
+                    category = args.get("category_preference", "").strip()
+
+                    print(f"[DEBUG] from_city: {from_city}, to_city: {to_city}")
+
+                    result = get_recommended_places(city_preference=to_city, category_preference=category)
 
                     reply = "\n".join([f"- {name} ({city}): {desc}" for name, city, desc in result]) if result else "Veritabanında uygun sonuç bulunamadı."
-
                     chat_history.append({"role": "function", "name": "get_recommended_places", "content": reply})
 
-                    # AI cevabını yeniden oluştur
+                    if from_city and to_city:
+                        flight_data = get_flights_by_cities(from_city, to_city)
+                        print(f"[DEBUG] Uçuş verileri: {flight_data}")
+
                     completion = create_completion(messages=chat_history)
                     ai_reply = completion.choices[0].message.content
-
-                    # Uçuş verisini çek (örnek: İstanbul'dan önerilen şehre)
-                    flight_data = get_flights_by_city_arrival(args.get("city_preference", ""))
                     break
         else:
             ai_reply = response_msg.content
@@ -98,6 +109,7 @@ def chat():
     session["chat_history"] = chat_history
 
     return jsonify({"response": ai_reply, "history": chat_history, "flights": flight_data})
+
 
 @app.route("/reset", methods=["GET"])
 def reset():

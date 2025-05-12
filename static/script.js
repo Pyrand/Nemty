@@ -80,7 +80,6 @@ async function sendMessage(event) {
   }
 
   async function showFlights() {
-    const res = await fetch("/flights");
     const data = await res.json();
 
     const box = document.getElementById("flight-results");
@@ -100,6 +99,6 @@ async function sendMessage(event) {
     box.appendChild(ul);
 }
 
-//window.addEventListener("DOMContentLoaded", showFlights);
+
 
   

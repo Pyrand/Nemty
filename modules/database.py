@@ -16,10 +16,10 @@ def query_local_database(city_preference=None, category_preference=None):
     query = "SELECT name, city, description FROM places WHERE 1=1"
     params = []
     if city_preference:
-        query += " AND city LIKE ?"
+        query += " AND LOWER(city) LIKE ?"
         params.append(f"%{city_preference}%")
     if category_preference:
-        query += " AND category LIKE ?"
+        query += " AND LOWER(category) LIKE ?"
         params.append(f"%{category_preference}%")
 
     cursor.execute(query, params)
