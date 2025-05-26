@@ -2,32 +2,51 @@
 <html lang="tr">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Nemty: Seyahat Danışmanı</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
   <script defer src="{{ url_for('static', filename='script.js') }}"></script>
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
 <body>
-  <h2>Nemty</h2>
+  <div class="app-wrapper">
+    <div class="app-container"> <!-- Ana flex konteyner -->
 
-  <div id="flights-box">
-    <strong>✈️ Uçuş Bilgileri</strong>
-    <div id="flight-results"></div>
-      <div id="hotel-results-box">
-        <strong>🏨 Otel Bilgileri</strong>
-      <div id="hotel-results"></div>
-    </div>
-  </div>
+      <!-- Sol Bölüm: Chat Alanı -->
+      <div class="chat-main-area">
+        <h2>Nemty</h2>
+        <div class="chat-module">
+          <div class="chat-box">
+            <!-- Mesajlar buraya gelecek -->
+          </div>
+          <form onsubmit="sendMessage(event)">
+            <input id="message" type="text" placeholder="Mesajınızı yazın..." required>
+            <button type="submit">Gönder</button>
+          </form>
+        </div>
+        <button class="reset-button" onclick="resetChat()">Konuşmayı Sıfırla</button>
+      </div>
 
+      <!-- Sağ Bölüm: Bilgi Paneli -->
+      <div class="sidebar-info-area">
+        <div class="info-panel">
+          <div id="flights-box" class="info-box">
+            <strong>✈️ Uçuş Bilgileri</strong>
+            <div id="flight-results">
+              <!-- İçerik -->
+            </div>
+          </div>
 
-  <div class="chat-box"></div>
-  
-  <form onsubmit="sendMessage(event)">
-    <input id="message" type="text" placeholder="Mesajınızı yazın..." required>
-    <button type="submit">Gönder</button>
-  </form>
+          <div id="hotel-results-box" class="info-box">
+            <strong>🏨 Otel Bilgileri</strong>
+            <div id="hotel-results">
+              <!-- İçerik -->
+            </div>
+          </div>
+        </div>
+      </div>
 
-  <!-- Reset butonu -->
-  <button onclick="resetChat()">Konuşmayı Sıfırla</button>
+    </div> <!-- .app-container sonu -->
+  </div> <!-- .app-wrapper sonu -->
 </body>
 </html>
