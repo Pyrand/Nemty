@@ -7,7 +7,7 @@ from modules.database import query_local_database, fetch_from_opentripmap, get_r
 from modules.ai_tools import client, create_completion
 from modules.flights import get_flights_by_cities
 from modules.helpers import print_error
-from modules.hotels import get_hotels_by_city
+from modules.hotels import get_hotels_by_city, extract_guests_from_message
 
 
 load_dotenv()
@@ -112,11 +112,36 @@ def chat():
     return jsonify({"response": ai_reply, "history": chat_history, "flights": flight_data})
 
 
-@app.route("/hotels", methods="POST")
+@app.route("/hotels", methods=["POST"])
 def hotels():
-    city = request.json.get("city")
-    hotels = get_hotels_by_city(city)
-    return jsonify({"hotels": hotels})
+    print("[DEBUG] /hotels endpoint called")
+    try:
+        request_data = request.get_json()
+        print(f"[DEBUG] Request data: {request_data}")
+
+        city = request_data.get("city") if request_data else None
+        user_message = request_data.get("message") if request_data else ""
+        print(f"[DEBUG] Extracted city: {city}")
+        print(f"[DEBUG] Extracted message: {user_message}")
+
+        if not city:
+            print("[DEBUG] No city provided")
+            return jsonify({"hotels": ["Şehir adı belirtilmedi."]})
+
+        # Otomatik kişi/çocuk çıkar
+        adults, children = extract_guests_from_message(user_message)
+        print(f"[DEBUG] Extracted adults: {adults}, children: {children}")
+
+        print(f"[DEBUG] Calling get_hotels_by_city with: {city}")
+        hotels_result = get_hotels_by_city(city, adults=adults, children=children)
+        print(f"[DEBUG] Hotels result: {hotels_result}")
+
+        return jsonify({"hotels": hotels_result})
+
+    except Exception as e:
+        print(f"[DEBUG] Error in /hotels endpoint: {e}")
+        return jsonify({"hotels": [f"Hata oluştu: {str(e)}"]})
+
 
 
 @app.route("/reset", methods=["GET"])

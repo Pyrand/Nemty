@@ -72,7 +72,7 @@ def get_flights_by_cities(from_city, to_city):
             part = response.json().get("departures", [])
             flights.extend(part)
 
-    print(f"[DEBUG] Toplam gelen uçuş sayısı: {len(flights)}")
+    #print(f"[DEBUG] Toplam gelen uçuş sayısı: {len(flights)}")
 
     for f in flights:
         try:
@@ -80,7 +80,7 @@ def get_flights_by_cities(from_city, to_city):
             dep = f.get("departure", {}).get("airport", {}).get("name", "Yok")
             arr = f.get("arrival", {}).get("airport", {}).get("name", "Yok")
             arr_icao = f.get("arrival", {}).get("airport", {}).get("icao", "Yok")
-            print(f"[DEBUG] {flight_number}: {dep} → {arr} ({arr_icao})")
+            #print(f"[DEBUG] {flight_number}: {dep} → {arr} ({arr_icao})")
         except Exception as e:
             print(f"[Uçuş log hatası] {e}")
 

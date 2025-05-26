@@ -103,6 +103,20 @@ h2 {
     padding-left: 20px;
 }
 
+#hotel-results-box {
+    margin-top: 18px;
+    background-color: #fff9e1;
+    padding: 12px;
+    border-radius: 10px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    font-size: 14px;
+}
+#hotel-results ul {
+    padding-left: 20px;
+    margin-bottom: 0;
+}
+
+
 /* Input ve butonlar */
 form {
     display: flex;
