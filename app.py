@@ -7,6 +7,7 @@ from modules.database import query_local_database, fetch_from_opentripmap, get_r
 from modules.ai_tools import client, create_completion
 from modules.flights import get_flights_by_cities
 from modules.helpers import print_error
+from modules.hotels import get_hotels_by_city
 
 
 load_dotenv()
@@ -109,6 +110,13 @@ def chat():
     session["chat_history"] = chat_history
 
     return jsonify({"response": ai_reply, "history": chat_history, "flights": flight_data})
+
+
+@app.route("/hotels", methods="POST")
+def hotels():
+    city = request.json.get("city")
+    hotels = get_hotels_by_city(city)
+    return jsonify({"hotels": hotels})
 
 
 @app.route("/reset", methods=["GET"])

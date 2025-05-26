@@ -24,10 +24,9 @@ def get_icao_list_by_city(city_name):
     icao_list = []
 
     for item in items:
-        if item.get("countryCode") in ["TR", "GB", "FR"]:
-            icao = item.get("icao")
-            if icao:
-                icao_list.append(icao)
+        icao = item.get("icao")
+        if icao:
+            icao_list.append(icao)
 
     return icao_list
 
@@ -93,15 +92,22 @@ def get_flights_by_cities(from_city, to_city):
         if any(to.lower() == arrival_icao for to in to_icao_list) or \
            any(to_city.lower() in field for field in [arrival_city, arrival_name]):
             filtered.append(f)
+            
+    filtered = filtered[:3]
 
     results = []
     for flight in filtered:
         airline = flight.get("airline", {}).get("name", "Bilinmiyor")
         flight_number = flight.get("number", "N/A")
+        
+        departure_info = flight.get("departure", {})
+        scheduled_time = departure_info.get("scheduledTime", {})
         departure_time = (
-            flight.get("departure", {}).get("scheduledTimeLocal")
-            or "Kalkış saati bulunamadı"
-        )
-        results.append(f"{airline} {flight_number} - Kalkış: {departure_time}")
+            scheduled_time.get("local") or
+            scheduled_time.get("utc") or
+            "Kalkış saati bulunamadı"
+    )
+        
+    results.append(f"{airline} {flight_number} - \n Kalkış: {departure_time}")
 
     return results or [f"{from_city.title()} → {to_city.title()} için uçuş bulunamadı."]
