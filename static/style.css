@@ -53,24 +53,27 @@ body {
     display: flex;
     justify-content: center;
     align-items: flex-start;
-    padding: 50px 25px;
+    padding: 40px 0 90px 0;
     min-height: 100vh;
+    background: var(--bg-abyss);
 }
+
 
 .app-container {
     background-color: var(--bg-glass-surface);
     backdrop-filter: blur(12px) saturate(150%);
-    -webkit-backdrop-filter: blur(12px) saturate(150%);
-    max-width: 1300px;
-    width: 100%;
-    padding: 40px;
+    max-width: 1500px;
+    width: 92vw;
+    min-height: 600px;
+    padding: 50px 60px 45px 60px;
     border-radius: var(--border-radius-subtle);
     box-shadow: 0 20px 60px var(--shadow-deep-space);
     display: flex;
-    gap: 40px;
+    gap: 70px;
     border: 1px solid var(--border-grid-line);
     position: relative;
 }
+
 
 .app-container::before, .app-container::after {
     content: '';
@@ -87,10 +90,10 @@ body {
 
 /* --- Sol Bölüm: Chat Alanı --- */
 .chat-main-area {
-    flex: 3;
+    flex: 4;
     display: flex;
     flex-direction: column;
-    gap: 30px;
+    gap: 32px;
 }
 
 .chat-main-area h2 {
@@ -118,15 +121,17 @@ body {
 .chat-box {
     border: 1px solid var(--border-grid-line);
     border-radius: var(--border-radius-sharp);
-    padding: 20px;
-    max-height: 600px;
-    min-height: 400px;
+    padding: 35px;
+    max-height: 700px;
+    min-height: 480px;
+    font-size: 17px;
     overflow-y: auto;
     background-color: var(--bg-abyss);
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 18px;
 }
+
 
 /* Scrollbar Stilleri (Neon YEŞİL) */
 .chat-box { 
@@ -186,11 +191,11 @@ body {
 
 input#message {
     flex-grow: 1;
-    padding: 15px 22px;
+    padding: 17px 24px;
     border: 1px solid var(--border-grid-line);
     border-radius: var(--border-radius-sharp);
     outline: none;
-    font-size: 16px;
+    font-size: 18px;
     color: var(--text-cyber-light);
     background-color: var(--bg-input-field);
     transition: all 0.3s ease;
@@ -206,11 +211,11 @@ input#message::placeholder { color: var(--text-data-stream); font-weight: 400; }
     background: transparent;
     color: var(--primary-green-glow); /* Buton metni YEŞİL */
     border: 2px solid var(--primary-green-base); /* Buton border YEŞİL */
-    padding: 14px 28px;
+    padding: 15px 30px;
     border-radius: var(--border-radius-sharp);
     font-family: 'Orbitron', sans-serif;
     font-weight: 500;
-    font-size: 16px;
+    font-size: 17px;
     cursor: pointer;
     transition: all 0.3s ease;
     box-shadow: 0 0 0px var(--primary-green-glow);
@@ -249,10 +254,11 @@ input#message::placeholder { color: var(--text-data-stream); font-weight: 400; }
 
 /* --- Sağ Bölüm: Bilgi Paneli --- */
 .sidebar-info-area {
-    flex: 1.5;
+    flex: 1.2;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
+    min-width: 260px;
 }
 
 .info-panel {
@@ -264,16 +270,15 @@ input#message::placeholder { color: var(--text-data-stream); font-weight: 400; }
 
 .info-box {
     background-color: var(--bg-glass-surface);
-    backdrop-filter: blur(8px) saturate(120%);
-    -webkit-backdrop-filter: blur(8px) saturate(120%);
-    color: var(--text-cyber-light);
-    padding: 25px;
+    padding: 28px 18px;
     border-radius: var(--border-radius-sharp);
-    border: 1px solid var(--border-grid-line);
-    box-shadow: 0 10px 25px rgba(0,0,0,0.4);
-    transition: border-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
-    position: relative;
+    margin-bottom: 22px;
+    min-width: 240px;
+    min-height: 140px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    transition: border-color 0.3s, transform 0.3s;
 }
+
 .info-box::before {
     content: '';
     position: absolute;
@@ -314,6 +319,180 @@ input#message::placeholder { color: var(--text-data-stream); font-weight: 400; }
     border-bottom: 1px solid rgba(57,255,20,0.1); /* Çok ince YEŞİLİMSİ ayırıcı */
 }
 #flight-results li:last-child, #hotel-results li:last-child { border-bottom: none; }
+
+/* HEADER */
+.site-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    background: var(--bg-glass-surface);
+    border-bottom: 2px solid var(--primary-green-glow);
+    box-shadow: 0 4px 16px rgba(57,255,20,0.08);
+    padding: 22px 0 18px 0;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+.logo {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 2.2rem;
+    color: var(--primary-green-glow);
+    letter-spacing: 2px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    text-shadow: 0 0 12px var(--primary-green-glow), 0 0 6px var(--primary-green-base);
+}
+.logo-dot {
+    width: 13px;
+    height: 13px;
+    background: var(--primary-green-glow);
+    border-radius: 50%;
+    display: inline-block;
+    margin-left: 6px;
+    box-shadow: 0 0 8px 2px var(--primary-green-glow);
+}
+
+/* FOOTER */
+.site-footer {
+    width: 100%;
+    background: var(--bg-glass-surface);
+    border-top: 2px solid var(--primary-green-glow);
+    box-shadow: 0 -3px 18px rgba(57,255,20,0.07);
+    text-align: center;
+    padding: 22px 0 14px 0;
+    font-size: 1rem;
+    color: var(--text-mech-gray);
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    z-index: 10;
+    letter-spacing: 0.5px;
+    font-family: 'Orbitron', 'Poppins', sans-serif;
+    backdrop-filter: blur(10px) saturate(130%);
+}
+.site-footer .footer-sep {
+    margin: 0 12px;
+    color: var(--primary-green-glow);
+}
+
+
+#auth-area {
+    min-height: 100vh;
+    width: 100vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    background: transparent;
+}
+
+.auth-tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 16px;
+}
+.auth-tabs button {
+    background: transparent;
+    color: var(--primary-green-base);
+    border: 2px solid var(--primary-green-base);
+    border-bottom: none;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 18px;
+    padding: 7px 36px;
+    cursor: pointer;
+    border-radius: 7px 7px 0 0;
+    opacity: 0.75;
+    transition: 0.18s;
+    outline: none;
+}
+.auth-tabs button.active {
+    background: var(--bg-matrix-dark);
+    color: var(--primary-green-glow);
+    opacity: 1;
+    border-bottom: 2px solid var(--bg-matrix-dark);
+}
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    background: var(--bg-glass-surface);
+    padding: 36px 30px 22px 30px;
+    border-radius: 9px;
+    border: 1.5px solid var(--border-grid-line);
+    min-width: 340px;
+    margin-top: 0;
+    margin-bottom: 25px;
+    max-width: 650px;
+}
+.auth-form input {
+    padding: 13px 14px;
+    border-radius: 5px;
+    border: none;
+    font-size: 17px;
+    outline: none;
+}
+.auth-form button {
+    margin-top: 7px;
+    background: var(--primary-green-base);
+    color: var(--bg-abyss);
+    border-radius: 5px;
+    border: none;
+    font-weight: 700;
+    font-size: 18px;
+    padding: 13px 0;
+    cursor: pointer;
+    transition: 0.18s;
+    width: 100%;
+    box-shadow: 0 1px 6px rgba(57,255,20,0.04);
+    letter-spacing: 0.5px;
+    outline: none;
+    appearance: none;
+}
+
+.auth-form button:hover {
+    background: var(--primary-green-glow);
+    color: var(--bg-abyss);
+}
+
+
+.auth-form button:hover { background: var(--primary-green-glow); color: var(--bg-abyss);}
+.auth-message { color: var(--primary-green-glow); font-size: 15px; min-height: 20px;}
+
+
+#welcome-user {
+    font-size: 1.13rem;
+    color: var(--primary-green-glow);
+    font-family: 'Orbitron', sans-serif;
+    margin-left: 18px;
+    min-width: 170px;
+    letter-spacing: 0.5px;
+    font-weight: 500;
+}
+
+#logout-btn {
+    margin-right: 22px;
+    background: transparent;
+    color: var(--primary-green-glow);
+    border: 2px solid var(--primary-green-glow);
+    font-family: 'Orbitron', sans-serif;
+    padding: 7px 28px;
+    border-radius: 7px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.18s;
+    font-weight: 500;
+    letter-spacing: 1px;
+    outline: none;
+}
+#logout-btn:hover {
+    background: var(--primary-green-base);
+    color: var(--bg-abyss);
+    border-color: var(--primary-green-base);
+    box-shadow: 0 0 12px 0 var(--primary-green-glow);
+}
 
 
 /* --- Mobil Uyum (Responsive Tasarım) --- */

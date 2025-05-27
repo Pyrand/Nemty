@@ -1,3 +1,107 @@
+document.addEventListener("DOMContentLoaded", function() {
+    // SPA state başlangıcı: eğer giriş yapılmamışsa ana app'ı gizle
+    checkLogin();
+
+    // Tab arası geçiş
+    document.getElementById("login-tab").onclick = function() {
+        this.classList.add("active");
+        document.getElementById("register-tab").classList.remove("active");
+        document.getElementById("login-form").style.display = "";
+        document.getElementById("register-form").style.display = "none";
+    };
+    document.getElementById("register-tab").onclick = function() {
+        this.classList.add("active");
+        document.getElementById("login-tab").classList.remove("active");
+        document.getElementById("login-form").style.display = "none";
+        document.getElementById("register-form").style.display = "";
+    };
+
+    // Login formu
+    document.getElementById("login-form").onsubmit = async function(e) {
+        e.preventDefault();
+        const username = document.getElementById("login-username").value;
+        const password = document.getElementById("login-password").value;
+        const res = await fetch("/api/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ username, password })
+        });
+        const data = await res.json();
+        document.getElementById("login-message").textContent = data.message;
+        if (data.success) {
+            // Kutuları temizle
+            document.getElementById("login-username").value = "";
+            document.getElementById("login-password").value = "";
+            document.getElementById("login-message").textContent = "";
+            document.getElementById("register-username").value = "";
+            document.getElementById("register-password").value = "";
+            document.getElementById("register-message").textContent = "";
+            showApp();
+        }
+    };
+
+    // Register formu
+    document.getElementById("register-form").onsubmit = async function(e) {
+        e.preventDefault();
+        const username = document.getElementById("register-username").value;
+        const password = document.getElementById("register-password").value;
+        const res = await fetch("/api/register", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ username, password })
+        });
+        const data = await res.json();
+        document.getElementById("register-message").textContent = data.message;
+        if (data.success) {
+            document.getElementById("login-username").value = "";
+            document.getElementById("login-password").value = "";
+            document.getElementById("login-message").textContent = "";
+            document.getElementById("register-username").value = "";
+            document.getElementById("register-password").value = "";
+        }
+    };
+
+    // Çıkış yapmak için (header’a ekleyeceğin bir çıkış butonu için)
+    const logoutBtn = document.getElementById("logout-btn");
+    if (logoutBtn) {
+        logoutBtn.onclick = async function() {
+            await fetch("/api/logout", { method: "POST" });
+            document.getElementById("main-app-area").style.display = "none";
+            document.getElementById("auth-area").style.display = "";
+        };
+    }
+});
+
+
+function showApp() {
+    document.getElementById("auth-area").style.display = "none";
+    document.getElementById("main-app-area").style.display = "";
+
+    fetch("/api/check-login")
+        .then(res => res.json())
+        .then(data => {
+            const welcomeDiv = document.getElementById("welcome-user");
+            if (data.logged_in && data.user) {
+                welcomeDiv.textContent = `Welcome, ${data.user}!`;
+            } else {
+                welcomeDiv.textContent = "";
+            }
+        });
+}
+
+function checkLogin() {
+    fetch("/api/check-login")
+        .then(res => res.json())
+        .then(data => {
+            if (data.logged_in) {
+                showApp();
+            } else {
+                document.getElementById("auth-area").style.display = "";
+                document.getElementById("main-app-area").style.display = "none";
+            }
+        });
+}
+
 async function sendMessage(event) {
     event.preventDefault();
     const input = document.querySelector("#message");

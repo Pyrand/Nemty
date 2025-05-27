@@ -6,8 +6,8 @@ from modules.helpers import print_error
 from modules.database import query_local_database, fetch_from_opentripmap, get_recommended_places
 from modules.ai_tools import client, create_completion
 from modules.flights import get_flights_by_cities
-from modules.helpers import print_error
 from modules.hotels import get_hotels_by_city, extract_guests_from_message
+from modules.auth import register_user, login_user
 
 
 load_dotenv()
@@ -128,7 +128,6 @@ def hotels():
             print("[DEBUG] No city provided")
             return jsonify({"hotels": ["Şehir adı belirtilmedi."]})
 
-        # Otomatik kişi/çocuk çıkar
         adults, children = extract_guests_from_message(user_message)
         print(f"[DEBUG] Extracted adults: {adults}, children: {children}")
 
@@ -141,6 +140,36 @@ def hotels():
     except Exception as e:
         print(f"[DEBUG] Error in /hotels endpoint: {e}")
         return jsonify({"hotels": [f"Hata oluştu: {str(e)}"]})
+
+
+@app.route("/api/register", methods=["POST"])
+def api_register():
+    data = request.get_json()
+    username = data.get("username")
+    password = data.get("password")
+    success, msg = register_user(username, password)
+    if success:
+        session["user"] = username
+    return jsonify({"success": success, "message": msg})
+
+@app.route("/api/login", methods=["POST"])
+def api_login():
+    data = request.get_json()
+    username = data.get("username")
+    password = data.get("password")
+    success, msg = login_user(username, password)
+    if success:
+        session["user"] = username
+    return jsonify({"success": success, "message": msg})
+
+@app.route("/api/logout", methods=["POST"])
+def api_logout():
+    session.pop("user", None)
+    return jsonify({"success": True})
+
+@app.route("/api/check-login")
+def check_login():
+    return jsonify({"logged_in": "user" in session, "user": session.get("user")})
 
 
 
