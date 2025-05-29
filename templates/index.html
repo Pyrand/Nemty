@@ -10,87 +10,79 @@
 </head>
 <body>
 
-  <div id="auth-area" style="display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:60vh;">
-    <div class="auth-tabs">
-        <button id="login-tab" class="active">Giriş Yap</button>
-        <button id="register-tab">Kayıt Ol</button>
+  <!-- Giriş/Kayıt Alanı -->
+  <div id="auth-area">
+    <div class="auth-container">
+      <div class="auth-welcome-section">
+        <h1>Welcome to Nemty</h1>
+        <p>Your AI Travel Agent</p>
+      </div>
+      <div class="auth-forms-section">
+        <div class="auth-tabs">
+          <button id="login-tab" class="active">Giriş Yap</button>
+          <button id="register-tab">Kayıt Ol</button>
+        </div>
+        <form id="login-form" class="auth-form">
+          <input type="text" id="login-username" placeholder="Kullanıcı adı" required>
+          <input type="password" id="login-password" placeholder="Şifre" required>
+          <button type="submit">Giriş Yap</button>
+          <div class="auth-message" id="login-message"></div>
+        </form>
+        <form id="register-form" class="auth-form" style="display:none;">
+          <input type="text" id="register-username" placeholder="Kullanıcı adı" required>
+          <input type="email" id="register-email" placeholder="E-posta" required>
+          <input type="tel" id="register-phone" placeholder="Telefon Numarası (isteğe bağlı)">
+          <input type="password" id="register-password" placeholder="Şifre" required>
+          <button type="submit">Kayıt Ol</button>
+          <div class="auth-message" id="register-message"></div>
+        </form>
+      </div>
     </div>
-    <form id="login-form" class="auth-form">
-        <input type="text" id="login-username" placeholder="Kullanıcı adı" required>
-        <input type="password" id="login-password" placeholder="Şifre" required>
-        <button type="submit">Giriş Yap</button>
-        <div class="auth-message" id="login-message"></div>
-    </form>
-    <form id="register-form" class="auth-form" style="display:none;">
-        <input type="text" id="register-username" placeholder="Kullanıcı adı" required>
-        <input type="password" id="register-password" placeholder="Şifre" required>
-        <button type="submit">Kayıt Ol</button>
-        <div class="auth-message" id="register-message"></div>
-    </form>
   </div>
 
+  <!-- Ana Uygulama Alanı -->
   <div id="main-app-area" style="display:none;">
-        <header class="site-header">        
-            <div id="welcome-user">
-            </div>
-            <div class="logo">
-              <span>Nemty</span>
-              <span class="logo-dot"></span>
-            </div>
-            <button id="logout-btn" style="margin-right: 24px; background: transparent; color: #39ff14; border: 2px solid #39ff14; font-family: Orbitron, sans-serif; padding: 7px 28px; border-radius: 7px; font-size: 1rem; cursor: pointer;">Exit</button>
-        </header>
-
-
+    <header class="site-header">
+      <span id="welcome-user"></span>
+      <button id="logout-btn">Çıkış</button>
+    </header>
     <div class="app-wrapper">
-      <div class="app-container"> <!-- Ana flex konteyner -->
-
-        <!-- Sol Bölüm: Chat Alanı -->
+      <div class="app-container">
+        <!-- SOL: Chat Alanı -->
         <div class="chat-main-area">
-          
           <div class="chat-module">
-            <div class="chat-box">
-              <!-- Mesajlar buraya gelecek -->
-            </div>
+            <div class="chat-box"></div>
             <form onsubmit="sendMessage(event)">
-              <input id="message" type="text" placeholder="Mesajınızı yazın..." required>
+              <textarea id="message" placeholder="Mesajınızı yazın..." autocomplete="off" rows="1"></textarea>
               <button type="submit">Gönder</button>
             </form>
+            <button class="reset-button" onclick="resetChat()">Sıfırla</button>
           </div>
-          <button class="reset-button" onclick="resetChat()">Konuşmayı Sıfırla</button>
         </div>
-
-        <!-- Sağ Bölüm: Bilgi Paneli -->
+        <!-- SAĞ: Sidebar -->
         <div class="sidebar-info-area">
           <div class="info-panel">
-            <div id="flights-box" class="info-box">
-              <strong>✈️ Uçuş Bilgileri</strong>
-              <div id="flight-results">
-                <!-- İçerik -->
-              </div>
+            <div class="info-box">
+              <strong>Uçuş Sonuçları</strong>
+              <div id="flight-results"></div>
             </div>
-
-            <div id="hotel-results-box" class="info-box">
-              <strong>🏨 Otel Bilgileri</strong>
-              <div id="hotel-results">
-                <!-- İçerik -->
-              </div>
+            <div class="info-box">
+              <strong>Otel Sonuçları</strong>
+              <div id="hotel-results"></div>
             </div>
           </div>
         </div>
+      </div>
+    </div>
+  </div>
 
-      </div> <!-- .app-container sonu -->
-    </div> <!-- .app-wrapper sonu -->
-
-    <footer class="site-footer">
+  <footer class="site-footer">
       <div>
         <span>© 2025 Nemty. All rights reserved.</span>
         <span class="footer-sep">|</span>
-        <span>Made with <span style="color:#39ff14;">♥</span> by Kerem Bürkük</span>
+        <span>Made with <span style="color: var(--primary-green-glow);">♥</span> by Kerem Bürkük</span>
       </div>
-    </footer>
-  </div>
-
-  
+  </footer>
 
 </body>
 </html>

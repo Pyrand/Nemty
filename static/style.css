@@ -1,40 +1,48 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Orbitron:wght@500;700&display=swap');
 
 :root {
-    /* Fütüristik Siyah-Gri-YEŞİL Renk Paleti */
-    --primary-green-glow: #39ff14;   /* Canlı, neon benzeri YEŞİL */
-    --primary-green-base: #2ecc71;   /* Daha tok YEŞİL (Emerald gibi) */
-    --primary-green-dark: #27ae60;   /* Koyu YEŞİL */
+    /* Klinik Beyaz & Metalik Vurgu (Canlı Mavi ile) - YENİ TASARIM */
+    --primary-green-glow: #007BFF;
+    --primary-green-base: #0056b3;
+    --primary-green-dark: #004085;
 
-    --bg-abyss: #0a0a0c;
-    --bg-matrix-dark: #121417;
-    --bg-glass-surface: rgba(25, 28, 32, 0.65);
-    --bg-input-field: #1a1c20;
+    --bg-abyss: #F0F2F5; 
+    --bg-matrix-dark: #FFFFFF; 
+    --bg-glass-surface: rgba(255, 255, 255, 0.8); 
+    --bg-input-field: #FFFFFF;
+    --bg-chat-module-inner: #F8F9FA; 
+    
+    --text-cyber-light: #1d2129; 
+    --text-mech-gray: #4b5563; 
+    --text-data-stream: #6b7280; 
+    --text-on-primary-accent: #FFFFFF;
 
-    --text-cyber-light: #e8e8e8;
-    --text-mech-gray: #9ea3a8;
-    --text-data-stream: #656d78;
-
-    /* Kullanıcı mesajı için YEŞİL gradient */
-    --user-message-bg: linear-gradient(135deg, var(--primary-green-base), var(--primary-green-dark));
-    --user-message-text: #ffffff;
-    --ai-message-bg: #282c34;
+    --user-message-bg: linear-gradient(145deg, var(--primary-green-base), var(--primary-green-glow));
+    --user-message-text: var(--text-on-primary-accent);
+    
+    --ai-message-bg: #eef2f7; 
     --ai-message-text: var(--text-cyber-light);
 
-    --border-laser-line: rgba(57, 255, 20, 0.3); /* YEŞİL ince çizgi */
-    --border-grid-line: #30343a;
+    --border-grid-line: #e5e7eb;   
+    --border-input: #d1d5db;
+    --border-accent-subtle: rgba(0, 123, 255, 0.25);
     
-    --shadow-deep-space: rgba(0, 0, 0, 0.5);
-    /* YEŞİL Glow efekti için */
-    --glow-effect-green: 0 0 15px rgba(57, 255, 20, 0.5), 0 0 5px rgba(57, 255, 20, 0.7);
+    --shadow-soft-xl: 0 20px 50px -10px rgba(0, 0, 0, 0.08); 
+    --shadow-card: 0 8px 16px -4px rgba(0, 0, 0, 0.06);   
+    --shadow-interactive: 0px 4px 10px rgba(0, 123, 255, 0.12);
 
-    --input-bg: #222224;
-    --input-border: #444446;
-    --input-focus-border: var(--primary-green-base); /* Focus'ta yeşil */
+    --border-radius-sharp: 8px;  
+    --border-radius-subtle: 12px;
+    --border-radius-pill: 9999px; 
 
-    --border-radius-sharp: 4px;
-    --border-radius-subtle: 8px;
+    --header-height: 68px; /* site-header padding + border */
+    --footer-height: 53px; /* site-footer padding + border */
+    --app-wrapper-padding-top-bottom: 80px; /* app-wrapper dikey padding toplamı (40px + 40px) */
 }
+
+/* Keyframes for animations */
+@keyframes slideInFromLeft {0%{transform:translateX(-80px);opacity:0}100%{transform:translateX(0);opacity:1}}
+@keyframes fadeInScaleUp {0%{opacity:0;transform:scale(.95) translateY(10px)}100%{opacity:1;transform:scale(1) translateY(0)}}
 
 * {
     margin: 0;
@@ -46,506 +54,210 @@ body {
     font-family: 'Poppins', sans-serif;
     background-color: var(--bg-abyss);
     color: var(--text-cyber-light);
-    line-height: 1.6;
+    line-height: 1.65; 
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden; /* Sayfa genelinde yatay scroll'u engelle */
 }
 
+/* --- AUTHENTICATION AREA STYLES --- */
+#auth-area {display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px;background-color:var(--bg-abyss);width:100%;box-sizing:border-box;overflow-x:hidden;}
+.auth-container {display:flex;align-items:center;gap:70px;background-color:transparent;max-width:950px;width:90%;padding:40px 0;border:none;box-shadow:none;}
+.auth-welcome-section {flex:1.2;padding-right:30px;text-align:left;}
+.auth-welcome-section h1 {font-family:'Orbitron',sans-serif;font-size:3.2rem;color:var(--primary-green-base);line-height:1.25;margin-bottom:12px;text-shadow:0 1px 3px rgba(0,123,255,.1);animation:slideInFromLeft .7s cubic-bezier(.25,.46,.45,.94) forwards;opacity:0;}
+.auth-welcome-section p {font-family:'Poppins',sans-serif;font-size:1.35rem;color:var(--text-mech-gray);line-height:1.6;animation:slideInFromLeft .7s cubic-bezier(.25,.46,.45,.94) .2s forwards;opacity:0;}
+.auth-forms-section {flex:1;display:flex;flex-direction:column;align-items:center;max-width:400px;width:100%;background-color:transparent;}
+.auth-tabs {display:flex;gap:8px;margin-bottom:25px;animation:fadeInScaleUp .5s ease-out .4s forwards;opacity:0;}
+.auth-tabs button {font-family:'Orbitron',sans-serif;cursor:pointer;border-radius:7px 7px 0 0;outline:none;background:transparent;border:none;border-bottom:2px solid transparent;font-size:16px;padding:10px 22px;color:var(--text-mech-gray);opacity:.7;transition:all .25s ease;}
+.auth-tabs button.active {color:var(--primary-green-base);opacity:1;border-bottom-color:var(--primary-green-base);}
+.auth-tabs button:not(.active):hover {color:var(--primary-green-base);opacity:.9;border-bottom-color:rgba(0,123,255,.3);}
+.auth-form {display:flex;flex-direction:column;width:100%;gap:15px;background-color:rgba(255,255,255,.75);backdrop-filter:blur(12px) saturate(170%);-webkit-backdrop-filter:blur(12px) saturate(170%);border:1px solid rgba(222,226,230,.7);box-shadow:0 10px 35px 0 rgba(31,38,135,.15);padding:30px;border-radius:var(--border-radius-subtle);margin-bottom:20px;animation:fadeInScaleUp .6s ease-out .5s forwards;opacity:0;}
+.auth-form input {border-radius:var(--border-radius-sharp);border:1px solid var(--border-input);color:var(--text-cyber-light);outline:none;padding:13px 16px;font-size:15px;background-color:var(--input-bg);transition:border-color .2s,box-shadow .2s;}
+.auth-form input::placeholder {color:var(--text-data-stream);}
+.auth-form input:focus {border-color:var(--input-focus-border);box-shadow:0 0 0 3.5px var(--border-accent-subtle);}
+.auth-form button[type="submit"] {background:var(--primary-green-base);color:var(--text-on-primary-accent);border-radius:var(--border-radius-sharp);border:none;cursor:pointer;transition:background-color .2s,transform .2s,box-shadow .2s;width:100%;outline:none;appearance:none;margin-top:10px;padding:13px 0;font-weight:600;font-size:16px;letter-spacing:.4px;box-shadow:var(--shadow-interactive);}
+.auth-form button[type="submit"]:hover {background:var(--primary-green-dark);transform:translateY(-2px);}
+.auth-form button[type="submit"]:active {transform:translateY(0);box-shadow:0 2px 5px rgba(0,123,255,.1);}
+.auth-message {color:var(--primary-green-dark);min-height:22px;margin-top:8px;font-size:14.5px;text-align:center;text-shadow:0 1px 1px rgba(255,255,255,.4);}
+
+/* --- MAIN APPLICATION AREA - YENİ TASARIM --- */
 .app-wrapper {
     display: flex;
     justify-content: center;
-    align-items: flex-start;
-    padding: 40px 0 90px 0;
-    min-height: 100vh;
-    background: var(--bg-abyss);
+    padding: 40px 25px; /* Alt padding kaldırıldı, footer hesaba katılacak */
+    min-height: 100vh; /* Wrapper tüm ekranı kaplasın */
+    box-sizing: border-box;
 }
-
 
 .app-container {
-    background-color: var(--bg-glass-surface);
-    backdrop-filter: blur(12px) saturate(150%);
-    max-width: 1500px;
-    width: 92vw;
-    min-height: 600px;
-    padding: 50px 60px 45px 60px;
+    background-color: var(--bg-matrix-dark);
+    max-width: 1350px; 
+    width: 100%;
     border-radius: var(--border-radius-subtle);
-    box-shadow: 0 20px 60px var(--shadow-deep-space);
+    box-shadow: var(--shadow-soft-xl); 
     display: flex;
-    gap: 70px;
     border: 1px solid var(--border-grid-line);
-    position: relative;
+    overflow: hidden; /* Çocuk elemanların border-radius'u kesmemesi için */
+    /* Yüksekliği viewport'tan header, footer ve app-wrapper padding'lerini çıkararak ayarla */
+    height: calc(100vh - var(--header-height) - var(--footer-height) - var(--app-wrapper-padding-top-bottom));
+    max-height: calc(100vh - var(--header-height) - var(--footer-height) - var(--app-wrapper-padding-top-bottom));
 }
+.app-container::before, .app-container::after { display: none; }
 
-
-.app-container::before, .app-container::after {
-    content: '';
-    position: absolute;
-    width: 25px;
-    height: 25px;
-    border-color: var(--primary-green-glow); /* Köşe çizgileri YEŞİL */
-    border-style: solid;
-    opacity: 0.7;
-}
-.app-container::before { top: -2px; left: -2px; border-width: 2px 0 0 2px; border-top-left-radius: var(--border-radius-subtle); }
-.app-container::after { bottom: -2px; right: -2px; border-width: 0 2px 2px 0; border-bottom-right-radius: var(--border-radius-subtle); }
-
-
-/* --- Sol Bölüm: Chat Alanı --- */
+/* SOL: Chat Alanı */
 .chat-main-area {
-    flex: 4;
+    flex: 1; 
+    min-width: 450px; 
+    padding: 30px 35px; 
     display: flex;
     flex-direction: column;
-    gap: 32px;
-}
-
-.chat-main-area h2 {
-    font-family: 'Orbitron', sans-serif;
-    text-align: center;
-    font-weight: 700;
-    font-size: 34px;
-    color: var(--primary-green-glow); /* Başlık YEŞİL */
-    text-shadow: 0 0 10px var(--primary-green-glow), 0 0 5px var(--primary-green-base); /* YEŞİL text shadow */
-    letter-spacing: 1px;
+    border-right: 1px solid var(--border-grid-line); 
+    overflow: hidden; 
 }
 
 .chat-module {
+    flex-grow: 1; 
     display: flex;
     flex-direction: column;
     gap: 20px;
-    background-color: rgba(18, 20, 23, 0.8);
-    padding: 30px;
-    border-radius: var(--border-radius-sharp);
-    border: 1px solid var(--border-grid-line);
-    box-shadow: inset 0 0 20px rgba(0,0,0,0.3);
-    flex-grow: 1;
+    background-color: transparent;
+    padding: 0; border: none; box-shadow: none; 
+    overflow: hidden; 
 }
 
 .chat-box {
-    border: 1px solid var(--border-grid-line);
+    flex-grow: 1; 
+    background-color: var(--bg-chat-module-inner);
     border-radius: var(--border-radius-sharp);
-    padding: 35px;
-    max-height: 700px;
-    min-height: 480px;
-    font-size: 17px;
-    overflow-y: auto;
-    background-color: var(--bg-abyss);
+    padding: 20px;
+    overflow-y: auto; 
     display: flex;
     flex-direction: column;
-    gap: 18px;
+    gap: 15px; 
+    /* max-height veya height yok, flex ile ebeveyninden gelen alanı alacak */
 }
+.chat-box { scrollbar-width:thin; scrollbar-color:var(--primary-green-base) var(--bg-chat-module-inner);}
+.chat-box::-webkit-scrollbar {width:7px;}
+.chat-box::-webkit-scrollbar-track {background:var(--bg-chat-module-inner);border-radius:0 var(--border-radius-sharp) var(--border-radius-sharp) 0;}
+.chat-box::-webkit-scrollbar-thumb {background-color:var(--primary-green-base);border-radius:var(--border-radius-pill);}
+.chat-box::-webkit-scrollbar-thumb:hover {background-color:var(--primary-green-dark);}
 
+.user, .ai {padding:12px 18px;border-radius:10px;max-width:85%;font-size:14.5px;box-shadow:0 3px 6px rgba(0,0,0,.04);}
+.user {background:var(--user-message-bg);color:var(--user-message-text);align-self:flex-end;border-bottom-right-radius:3px;}
+.ai {background-color:var(--ai-message-bg);color:var(--ai-message-text);align-self:flex-start;border-bottom-left-radius:3px;border-left:4px solid var(--primary-green-base);}
+.ai em {color:var(--text-data-stream);font-style:italic;opacity:.8;display:block;text-align:center;padding:4px 0;font-size:.9em;}
+.ai h3 {font-family:'Orbitron',sans-serif;margin:10px 0 8px;font-size:15.5px;font-weight:600;color:var(--primary-green-dark);letter-spacing:.3px;}
+.ai p {margin-bottom:6px;font-size:.98em;}
+.ai ul {margin:6px 0 8px;padding-left:20px;list-style-type:disc;}
+.ai li {margin-bottom:5px;line-height:1.6;font-size:.95em;}
+.ai li::marker {color:var(--primary-green-base);font-size:.9em;}
+.ai strong, .ai b {font-weight:600;color:var(--primary-green-dark);}
 
-/* Scrollbar Stilleri (Neon YEŞİL) */
-.chat-box { 
-    scrollbar-width: thin; 
-    scrollbar-color: var(--primary-green-base) var(--bg-abyss); /* Scrollbar YEŞİL */
+.chat-module form {display:flex;gap:12px;align-items:center;margin-top:auto;padding-top:20px;}
+textarea#message { 
+    flex-grow:1;padding:14px 20px;border:1px solid var(--border-input);border-radius:var(--border-radius-pill);font-size:15px;font-family:'Poppins',sans-serif;color:var(--text-cyber-light);background-color:var(--input-bg);transition:border-color .2s ease,box-shadow .2s ease,height .1s ease-out;box-shadow:0 2px 5px rgba(0,0,0,.03);resize:none;overflow-y:auto;line-height:1.5;min-height:49.6px;max-height:130px;white-space:pre-wrap;word-wrap:break-word;
 }
-.chat-box::-webkit-scrollbar { width: 7px; }
-.chat-box::-webkit-scrollbar-track { background: var(--bg-abyss); }
-.chat-box::-webkit-scrollbar-thumb { background-color: var(--primary-green-base); border-radius: var(--border-radius-sharp); } /* Scrollbar YEŞİL */
-.chat-box::-webkit-scrollbar-thumb:hover { background-color: var(--primary-green-glow); box-shadow: var(--glow-effect-green); } /* Scrollbar YEŞİL glow */
+textarea#message:focus {border-color:var(--input-focus-border);box-shadow:0 0 0 3.5px var(--border-accent-subtle),0 3px 8px rgba(0,123,255,.08);}
+textarea#message::placeholder {color:var(--text-data-stream);font-weight:400;font-family:'Poppins',sans-serif;}
 
-.user, .ai {
-    padding: 12px 20px;
-    border-radius: var(--border-radius-subtle);
-    border-top-right-radius: 0;
-    border-bottom-left-radius: 0;
-    max-width: 85%;
-    line-height: 1.6;
-    font-size: 15px;
-    word-wrap: break-word;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.4);
-    border: 1px solid transparent;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-.user:hover, .ai:hover {
-    transform: scale(1.015);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.5);
-}
+.chat-module button[type="submit"] {background:var(--primary-green-base);color:var(--text-on-primary-accent);border:none;padding:0 25px;height:49.6px;line-height:49.6px;border-radius:var(--border-radius-pill);font-family:'Poppins',sans-serif;font-weight:600;font-size:15px;cursor:pointer;transition:all .2s ease;letter-spacing:.3px;box-shadow:var(--shadow-interactive);}
+.chat-module button[type="submit"]:hover {background-color:var(--primary-green-dark);transform:translateY(-2px);box-shadow:0 6px 12px rgba(0,123,255,.2);}
+.chat-module button[type="submit"]:active {transform:translateY(0);box-shadow:0 2px 6px rgba(0,123,255,.15);}
 
-.user {
-    background: var(--user-message-bg); /* YEŞİL gradient */
-    color: var(--user-message-text); 
-    align-self: flex-end;
-    text-align: left;
-    border-left: 3px solid var(--primary-green-glow); /* YEŞİL vurgu çizgisi */
-}
+.reset-button {background-color:transparent;color:var(--text-mech-gray);border:1px solid var(--border-grid-line);padding:8px 16px;border-radius:var(--border-radius-pill);font-weight:500;font-size:13px;cursor:pointer;transition:all .2s ease;align-self:flex-end;margin-top:15px;}
+.reset-button:hover {border-color:var(--text-data-stream);color:var(--text-cyber-light);background-color:var(--bg-chat-module-inner);}
 
-.ai {
-    background-color: var(--ai-message-bg);
-    color: var(--ai-message-text); 
-    align-self: flex-start;
-    text-align: left;
-    border-right: 3px solid var(--text-mech-gray);
-}
+/* SAĞ: Bilgi Akışı Alanı */
+.sidebar-info-area {flex:.7;min-width:320px;padding:30px 25px;background-color:var(--bg-abyss);overflow-y:auto;display:flex;flex-direction:column;}
+.info-panel {display:flex;flex-direction:column;gap:25px;} 
+.info-box {background-color:var(--bg-matrix-dark);padding:22px;border-radius:var(--border-radius-sharp);box-shadow:var(--shadow-card);border:1px solid transparent;transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease;}
+.info-box:hover {transform:translateY(-3px);box-shadow:0 10px 20px rgba(0,0,0,.08);border-color:var(--primary-green-base);}
+.info-box strong {font-family:'Poppins',sans-serif;display:block;font-size:1.05rem;font-weight:600;color:var(--primary-green-dark);margin-bottom:15px;padding-bottom:10px;border-bottom:1px solid var(--border-grid-line);letter-spacing:.2px;}
+#flight-results, #hotel-results {text-align:left;color:var(--text-mech-gray);font-size:14px;max-height:220px;overflow-y:auto;padding-right:8px;}
+#flight-results ul, #hotel-results ul {list-style-type:none;padding-left:0;}
+#flight-results li, #hotel-results li {padding:9px 5px;border-bottom:1px dashed #e0e0e0;font-size:.92em;transition:background-color .15s,color .15s;}
+#flight-results li:last-child, #hotel-results li:last-child {border-bottom:none;}
+#flight-results li:hover, #hotel-results li:hover {background-color:rgba(0,123,255,.07);color:var(--primary-green-dark);border-radius:4px;}
 
-/* AI Mesaj İçeriği */
-.ai em { color: var(--text-data-stream); font-style: normal; opacity: 0.7; display: block; text-align: center; padding: 5px 0; }
-.ai h3 { font-family: 'Orbitron', sans-serif; margin-top: 12px; margin-bottom: 10px; font-size: 17px; font-weight: 500; color: var(--primary-green-glow); letter-spacing: 0.5px;} /* YEŞİL H3 */
-.ai p { margin-bottom: 8px; }
-.ai ul { margin-top: 6px; margin-bottom: 10px; padding-left: 25px; list-style-type: square; }
-.ai li { margin-bottom: 6px; line-height: 1.65; }
-.ai li::marker { color: var(--primary-green-base); font-size: 1em; } /* YEŞİL marker */
-.ai strong, .ai b { font-weight: 600; color: var(--primary-green-glow); } /* YEŞİL strong/b */
-
-/* Mesaj Gönderme Formu */
-.chat-module form { display: flex; gap: 15px; align-items: center; }
-
-input#message {
-    flex-grow: 1;
-    padding: 17px 24px;
-    border: 1px solid var(--border-grid-line);
-    border-radius: var(--border-radius-sharp);
-    outline: none;
-    font-size: 18px;
-    color: var(--text-cyber-light);
-    background-color: var(--bg-input-field);
-    transition: all 0.3s ease;
-}
-input#message:focus {
-    border-color: var(--input-focus-border); /* YEŞİL focus border */
-    box-shadow: 0 0 0 2px rgba(57,255,20,0.3), inset 0 0 8px rgba(57,255,20,0.1); /* YEŞİL glow */
-    background-color: var(--bg-matrix-dark);
-}
-input#message::placeholder { color: var(--text-data-stream); font-weight: 400; }
-
-.chat-module button[type="submit"] {
-    background: transparent;
-    color: var(--primary-green-glow); /* Buton metni YEŞİL */
-    border: 2px solid var(--primary-green-base); /* Buton border YEŞİL */
-    padding: 15px 30px;
-    border-radius: var(--border-radius-sharp);
-    font-family: 'Orbitron', sans-serif;
-    font-weight: 500;
-    font-size: 17px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 0 0px var(--primary-green-glow);
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-.chat-module button[type="submit"]:hover {
-    background-color: var(--primary-green-base); /* Hover'da YEŞİL dolgu */
-    color: var(--bg-abyss);
-    border-color: var(--primary-green-base); /* Hover'da YEŞİL border */
-    box-shadow: var(--glow-effect-green); /* YEŞİL glow */
-}
-.chat-module button[type="submit"]:active {
-    transform: scale(0.98);
-    box-shadow: 0 0 5px var(--primary-green-glow); /* YEŞİL glow */
-}
-
-/* Reset Butonu */
-.reset-button {
-    background-color: transparent;
-    color: var(--text-mech-gray);
-    border: 1px solid var(--border-grid-line);
-    padding: 10px 22px;
-    border-radius: var(--border-radius-sharp);
-    font-weight: 500;
-    font-size: 14px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    align-self: center;
-}
-.reset-button:hover {
-    border-color: var(--text-mech-gray);
-    color: var(--text-cyber-light);
-    box-shadow: 0 0 10px rgba(158,163,168,0.2);
-}
-
-/* --- Sağ Bölüm: Bilgi Paneli --- */
-.sidebar-info-area {
-    flex: 1.2;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    min-width: 260px;
-}
-
-.info-panel {
-    display: flex;
-    flex-direction: column;
-    gap: 30px;
-    width: 100%;
-}
-
-.info-box {
-    background-color: var(--bg-glass-surface);
-    padding: 28px 18px;
-    border-radius: var(--border-radius-sharp);
-    margin-bottom: 22px;
-    min-width: 240px;
-    min-height: 140px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-    transition: border-color 0.3s, transform 0.3s;
-}
-
-.info-box::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 0%;
-    height: 3px;
-    background-color: var(--primary-green-glow); /* Üst çizgi YEŞİL */
-    transition: width 0.4s ease-out;
-    border-top-left-radius: var(--border-radius-sharp);
-}
-.info-box:hover::before {
-    width: 100%;
-}
-.info-box:hover {
-    border-color: var(--primary-green-base); /* Hover'da YEŞİL border */
-    transform: translateY(-5px);
-    box-shadow: 0 15px 35px rgba(0,0,0,0.5), 0 0 15px rgba(57,255,20,0.2); /* YEŞİL glow */
-}
-
-.info-box strong {
-    font-family: 'Orbitron', sans-serif;
-    display: block;
-    font-size: 19px;
-    font-weight: 500;
-    color: var(--primary-green-glow); /* Bilgi kutusu başlığı YEŞİL */
-    margin-bottom: 20px;
-    padding-bottom: 15px;
-    border-bottom: 1px solid var(--border-laser-line); /* YEŞİL border bottom */
-    text-align: left;
-    letter-spacing: 0.5px;
-}
-
-#flight-results, #hotel-results { text-align: center; color: var(--text-mech-gray); font-size: 15px;}
-#flight-results ul, #hotel-results ul { list-style-type: none; padding-left: 0; text-align: center; }
-#flight-results li, #hotel-results li {
-    padding: 10px 0;
-    border-bottom: 1px solid rgba(57,255,20,0.1); /* Çok ince YEŞİLİMSİ ayırıcı */
-}
-#flight-results li:last-child, #hotel-results li:last-child { border-bottom: none; }
-
-/* HEADER */
+/* --- Header & Footer --- */
 .site-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-    background: var(--bg-glass-surface);
-    border-bottom: 2px solid var(--primary-green-glow);
-    box-shadow: 0 4px 16px rgba(57,255,20,0.08);
-    padding: 22px 0 18px 0;
-    position: sticky;
-    top: 0;
-    z-index: 10;
+    width:100%;background:var(--bg-glass-surface);backdrop-filter:blur(12px) saturate(180%);-webkit-backdrop-filter:blur(12px) saturate(180%);box-shadow:0 2px 4px rgba(0,0,0,.05);padding:0 30px; /* Dikey padding kaldırıldı, yükseklik height ile yönetilecek */
+    z-index:100;color:var(--text-mech-gray);
+    display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border-grid-line);position:sticky;top:0;
+    height: var(--header-height); /* Sabit yükseklik */
 }
-.logo {
-    font-family: 'Orbitron', sans-serif;
-    font-size: 2.2rem;
-    color: var(--primary-green-glow);
-    letter-spacing: 2px;
-    font-weight: 700;
-    display: flex;
-    align-items: center;
-    gap: 7px;
-    text-shadow: 0 0 12px var(--primary-green-glow), 0 0 6px var(--primary-green-base);
-}
-.logo-dot {
-    width: 13px;
-    height: 13px;
-    background: var(--primary-green-glow);
-    border-radius: 50%;
-    display: inline-block;
-    margin-left: 6px;
-    box-shadow: 0 0 8px 2px var(--primary-green-glow);
-}
-
-/* FOOTER */
 .site-footer {
-    width: 100%;
-    background: var(--bg-glass-surface);
-    border-top: 2px solid var(--primary-green-glow);
-    box-shadow: 0 -3px 18px rgba(57,255,20,0.07);
-    text-align: center;
-    padding: 22px 0 14px 0;
-    font-size: 1rem;
-    color: var(--text-mech-gray);
-    position: fixed;
-    left: 0;
-    bottom: 0;
-    z-index: 10;
-    letter-spacing: 0.5px;
-    font-family: 'Orbitron', 'Poppins', sans-serif;
-    backdrop-filter: blur(10px) saturate(130%);
-}
-.site-footer .footer-sep {
-    margin: 0 12px;
-    color: var(--primary-green-glow);
+    width:100%;background:var(--bg-glass-surface);backdrop-filter:blur(12px) saturate(180%);-webkit-backdrop-filter:blur(12px) saturate(180%);box-shadow:0 -2px 4px rgba(0,0,0,.05); /* Üst gölge */
+    z-index:100;color:var(--text-mech-gray);
+    border-top:1px solid var(--border-grid-line);text-align:center;font-size:.85rem;position:fixed;left:0;bottom:0;font-family:'Poppins',sans-serif;
+    height: var(--footer-height); /* Sabit yükseklik */
+    display: flex; /* İçeriği dikey ortalamak için */
+    align-items: center; /* İçeriği dikey ortalamak için */
+    justify-content: center; /* İçeriği yatay ortalamak için */
+    padding: 0 30px; /* Yatay padding */
 }
 
+#welcome-user {font-size:.95rem;color:var(--text-mech-gray);font-family:'Poppins',sans-serif;margin-left:15px;font-weight:500;}
+.logo {font-family:'Orbitron',sans-serif;font-size:1.7rem;color:var(--primary-green-base);letter-spacing:1px;font-weight:700;display:flex;align-items:center;gap:7px;}
+.logo-dot {width:9px;height:9px;background:var(--primary-green-base);border-radius:50%;display:inline-block;margin-left:5px;box-shadow:0 0 6px rgba(0,123,255,.5);}
+#logout-btn {margin-right:0;background:transparent;color:var(--primary-green-base);border:1.5px solid var(--primary-green-base);font-family:'Poppins',sans-serif;padding:7px 18px;border-radius:var(--border-radius-pill);font-size:.88rem;font-weight:500;letter-spacing:.2px;transition:all .15s ease-in-out;}
+#logout-btn:hover {background:var(--primary-green-base);color:var(--text-on-primary-accent);box-shadow:var(--shadow-interactive);transform:translateY(-1px) scale(1.03);}
+#logout-btn:active {transform:translateY(0) scale(1);box-shadow:none;}
+.site-footer .footer-sep {margin:0 10px;color:var(--primary-green-base);opacity:.75;}
 
-#auth-area {
-    min-height: 100vh;
-    width: 100vw;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    background: transparent;
-}
-
-.auth-tabs {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 16px;
-}
-.auth-tabs button {
-    background: transparent;
-    color: var(--primary-green-base);
-    border: 2px solid var(--primary-green-base);
-    border-bottom: none;
-    font-family: 'Orbitron', sans-serif;
-    font-size: 18px;
-    padding: 7px 36px;
-    cursor: pointer;
-    border-radius: 7px 7px 0 0;
-    opacity: 0.75;
-    transition: 0.18s;
-    outline: none;
-}
-.auth-tabs button.active {
-    background: var(--bg-matrix-dark);
-    color: var(--primary-green-glow);
-    opacity: 1;
-    border-bottom: 2px solid var(--bg-matrix-dark);
-}
-.auth-form {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    background: var(--bg-glass-surface);
-    padding: 36px 30px 22px 30px;
-    border-radius: 9px;
-    border: 1.5px solid var(--border-grid-line);
-    min-width: 340px;
-    margin-top: 0;
-    margin-bottom: 25px;
-    max-width: 650px;
-}
-.auth-form input {
-    padding: 13px 14px;
-    border-radius: 5px;
-    border: none;
-    font-size: 17px;
-    outline: none;
-}
-.auth-form button {
-    margin-top: 7px;
-    background: var(--primary-green-base);
-    color: var(--bg-abyss);
-    border-radius: 5px;
-    border: none;
-    font-weight: 700;
-    font-size: 18px;
-    padding: 13px 0;
-    cursor: pointer;
-    transition: 0.18s;
-    width: 100%;
-    box-shadow: 0 1px 6px rgba(57,255,20,0.04);
-    letter-spacing: 0.5px;
-    outline: none;
-    appearance: none;
-}
-
-.auth-form button:hover {
-    background: var(--primary-green-glow);
-    color: var(--bg-abyss);
-}
-
-
-.auth-form button:hover { background: var(--primary-green-glow); color: var(--bg-abyss);}
-.auth-message { color: var(--primary-green-glow); font-size: 15px; min-height: 20px;}
-
-
-#welcome-user {
-    font-size: 1.13rem;
-    color: var(--primary-green-glow);
-    font-family: 'Orbitron', sans-serif;
-    margin-left: 18px;
-    min-width: 170px;
-    letter-spacing: 0.5px;
-    font-weight: 500;
-}
-
-#logout-btn {
-    margin-right: 22px;
-    background: transparent;
-    color: var(--primary-green-glow);
-    border: 2px solid var(--primary-green-glow);
-    font-family: 'Orbitron', sans-serif;
-    padding: 7px 28px;
-    border-radius: 7px;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: all 0.18s;
-    font-weight: 500;
-    letter-spacing: 1px;
-    outline: none;
-}
-#logout-btn:hover {
-    background: var(--primary-green-base);
-    color: var(--bg-abyss);
-    border-color: var(--primary-green-base);
-    box-shadow: 0 0 12px 0 var(--primary-green-glow);
-}
-
-
-/* --- Mobil Uyum (Responsive Tasarım) --- */
-@media (max-width: 1024px) {
-    .app-container {
-        flex-direction: column;
-        padding: 25px;
-        gap: 30px;
-        backdrop-filter: blur(8px) saturate(120%);
-        -webkit-backdrop-filter: blur(8px) saturate(120%);
+/* MEDIA QUERIES */
+@media (max-width:1024px) {
+    :root {
+        --header-height: 60px;
+        --footer-height: 48px;
+        --app-wrapper-padding-top-bottom: 60px; /* 30px + 30px */
     }
-    .app-container::before, .app-container::after { display: none; }
-
-    .chat-main-area, .sidebar-info-area {
-        flex: none;
-        width: 100%;
-    }
-    .sidebar-info-area {
-        justify-content: flex-start;
-    }
-    .info-box:hover {
-        transform: translateY(-3px);
-    }
-    .chat-box {
-        max-height: 400px;
-        min-height: 250px;
-    }
+    .app-wrapper {padding:30px 15px;}
+    .app-container {flex-direction:column;padding:0; height: auto; min-height: calc(100vh - var(--header-height) - var(--footer-height) - var(--app-wrapper-padding-top-bottom));} /* Mobil için yükseklik auto, min-height kalır */
+    .chat-main-area {border-right:none;border-bottom:1px solid var(--border-grid-line);min-width:unset;padding:25px}
+    .sidebar-info-area {min-width:unset;padding:25px;background-color:var(--bg-matrix-dark)}
+    .chat-box {max-height:350px} /* Mobil için chat-box'a max-height verilebilir */
+    .auth-container {flex-direction:column;text-align:center;gap:30px;padding:30px 15px}
+    .auth-welcome-section {padding-right:0;margin-bottom:25px}
+    .auth-welcome-section h1 {font-size:2.5rem}
+    .auth-welcome-section p {font-size:1.15rem}
 }
-
-@media (max-width: 600px) {
-    body { font-size: 14px; }
-    .app-wrapper { padding: 20px 10px; }
-    .app-container { padding: 20px; }
-    .chat-main-area h2 { font-size: 28px; }
-    
-    .chat-module { padding: 20px; }
-    .user, .ai { padding: 10px 15px; font-size: 14px; }
-    input#message { padding: 13px 18px; font-size: 15px; }
-    .chat-module button[type="submit"] { padding: 13px 20px; font-size: 15px; }
-    
-    .info-box { padding: 20px; }
-    .info-box strong { font-size: 17px; }
-    #flight-results, #hotel-results { font-size: 14px; }
-
-    .chat-module form {
-        flex-direction: column;
-        align-items: stretch;
+@media (max-width:768px) {
+    :root {
+        --header-height: 56px;
+        --footer-height: 45px;
+        --app-wrapper-padding-top-bottom: 40px; /* 20px + 20px */
     }
-    .chat-module button[type="submit"] {
-        width: 100%;
+    .app-wrapper {padding:20px 15px;}
+    #welcome-user {display:none}
+    .site-header {justify-content:center;position:relative}
+    #logout-btn {position:absolute;right:20px}
+    .chat-main-area {padding:20px}
+    .sidebar-info-area {padding:20px}
+}
+@media (max-width:600px) {
+    body {font-size:14px}
+    .app-wrapper {padding:20px 10px;}
+    :root {
+        --header-height: 52px;
+        --footer-height: 42px;
+        --app-wrapper-padding-top-bottom: 40px;
     }
-    .reset-button {
-        width: 100%;
-        margin-top: 15px;
-    }
+    .auth-welcome-section h1 {font-size:2rem} .auth-welcome-section p {font-size:1rem}
+    .auth-tabs button {font-size:14.5px;padding:8px 16px}
+    .auth-form {padding:25px} .auth-form input, .auth-form button[type=submit] {font-size:14.5px}
+    .chat-module {gap:15px}
+    .chat-box {padding:15px;gap:12px;max-height:300px}
+    .user, .ai {padding:10px 15px;font-size:13.5px}
+    textarea#message {padding:12px 18px;font-size:14px;min-height:46.8px;max-height:110px;} 
+    .chat-module form {gap:10px}
+    .chat-module button[type=submit] {padding:0 22px;height:46.8px;line-height:46.8px;font-size:14px}
+    .reset-button {padding:7px 14px;font-size:12.5px;margin-top:12px}
+    .info-box {padding:18px} .info-box strong {font-size:1rem;margin-bottom:12px;padding-bottom:8px}
+    #flight-results, #hotel-results {font-size:13.5px;max-height:180px}
+    #flight-results li, #hotel-results li {padding:8px 3px;font-size:.9em}
+    .site-header, .site-footer {padding:0 20px;}
+    .logo {font-size:1.5rem} .logo-dot {width:8px;height:8px}
+    #logout-btn {padding:6px 15px;font-size:.8rem;}
+    .site-footer {font-size:.8rem;}
 }

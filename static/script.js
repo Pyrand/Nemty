@@ -38,26 +38,51 @@ document.addEventListener("DOMContentLoaded", function() {
             document.getElementById("register-message").textContent = "";
             showApp();
         }
+
+        const messageTextarea = document.getElementById('message');
+        if (messageTextarea) {
+          const initialMinHeight = getComputedStyle(messageTextarea).minHeight;
+
+          const adjustTextareaHeight = () => {
+              messageTextarea.style.height = 'auto';
+              let newHeight = messageTextarea.scrollHeight;
+              messageTextarea.style.height = newHeight + 'px';
+          };
+
+          messageTextarea.addEventListener('input', adjustTextareaHeight);
+          messageTextarea.style.height = initialMinHeight;
+
+        }
     };
 
     // Register formu
+        // Register formu
     document.getElementById("register-form").onsubmit = async function(e) {
         e.preventDefault();
         const username = document.getElementById("register-username").value;
+        const email = document.getElementById("register-email").value; // YENİ
+        const phone = document.getElementById("register-phone").value; // YENİ
         const password = document.getElementById("register-password").value;
+        
         const res = await fetch("/api/register", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ username, password })
+            body: JSON.stringify({ username, email, phone, password }) // email ve phone eklendi
         });
         const data = await res.json();
         document.getElementById("register-message").textContent = data.message;
         if (data.success) {
+            // Kutuları temizle (hem login hem register)
             document.getElementById("login-username").value = "";
             document.getElementById("login-password").value = "";
             document.getElementById("login-message").textContent = "";
+            
             document.getElementById("register-username").value = "";
+            document.getElementById("register-email").value = "";    // YENİ
+            document.getElementById("register-phone").value = "";    // YENİ
             document.getElementById("register-password").value = "";
+            // register-message başarılı kayıt sonrası temizlenebilir veya farklı bir mesaj gösterilebilir
+            // document.getElementById("register-message").textContent = "Kayıt başarılı! Giriş yapabilirsiniz."; 
         }
     };
 
@@ -68,6 +93,7 @@ document.addEventListener("DOMContentLoaded", function() {
             await fetch("/api/logout", { method: "POST" });
             document.getElementById("main-app-area").style.display = "none";
             document.getElementById("auth-area").style.display = "";
+            document.querySelector(".chat-box").innerHTML = "";
         };
     }
 });
@@ -83,11 +109,28 @@ function showApp() {
             const welcomeDiv = document.getElementById("welcome-user");
             if (data.logged_in && data.user) {
                 welcomeDiv.textContent = `Welcome, ${data.user}!`;
+
+                // 🟢 GİRİŞTE KULLANICI MESAJ GEÇMİŞİNİ YÜKLE
+                fetch("/api/history")
+                  .then(res => res.json())
+                  .then(data => {
+                      const chatBox = document.querySelector(".chat-box");
+                      chatBox.innerHTML = ""; // Kutuyu temizle
+                      if (data.history && data.history.length > 0) {
+                          data.history.forEach(msg => {
+                              if (msg.role === "user" || msg.role === "assistant") {
+                                  addMessageToChat(msg.role, msg.content);
+                              }
+                });
+        }
+    });
+
             } else {
                 welcomeDiv.textContent = "";
             }
         });
 }
+
 
 function checkLogin() {
     fetch("/api/check-login")
@@ -110,6 +153,9 @@ async function sendMessage(event) {
   
     addMessageToChat("user", message);
     input.value = "";
+    if (input.tagName.toLowerCase() === 'textarea') {
+        input.style.height = getComputedStyle(input).minHeight;
+    }
   
     const chatBox = document.querySelector(".chat-box");
     const loadingMsg = document.createElement("div");

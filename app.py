@@ -1,3 +1,4 @@
+import sqlite3
 from flask import Flask, render_template, request, jsonify, session
 from flask_session import Session
 import os
@@ -18,19 +19,44 @@ Session(app)
 
 @app.route("/")
 def index():
-    session["chat_history"] = []
     return render_template("index.html")
 
 @app.route("/chat", methods=["POST"])
 def chat():
+    import sqlite3
+    if "user" not in session:
+        return jsonify({"response": "Giriş yapılmamış.", "flights": []})
+
+    username = session["user"]
     user_input = request.json.get("message")
-    if "chat_history" not in session:
-        session["chat_history"] = []
 
-    chat_history = session["chat_history"]
+    def load_user_history(username):
+        conn = sqlite3.connect("users.db")
+        cursor = conn.cursor()
+        cursor.execute("SELECT role, content FROM user_messages WHERE username = ? ORDER BY created_at", (username,))
+        history = []
+        for role, content in cursor.fetchall():
+            if role == "function":
+                history.append({"role": role, "name": "get_recommended_places", "content": content})
+            else:
+                history.append({"role": role, "content": content})
+        conn.close()
+        return history
 
-    if not chat_history:
-        chat_history.append({
+    def save_message(username, role, content, name=None):
+        conn = sqlite3.connect("users.db")
+        cursor = conn.cursor()
+        if name:
+            content = f"[{name}] {content}"
+        cursor.execute("INSERT INTO user_messages (username, role, content) VALUES (?, ?, ?)", (username, role, content))
+        conn.commit()
+        conn.close()
+
+    chat_history = load_user_history(username)
+
+    # 🔥 SYSTEM PROMPT SADECE 1 KERE EKLENİR!
+    if not any(msg.get("role") == "system" for msg in chat_history):
+        system_msg = {
             "role": "system",
             "content": (
                 "You are a helpful and concise travel assistant. "
@@ -45,9 +71,13 @@ def chat():
                 "If no places are available at all, you may politely inform the user that no suggestions were found. "
                 "Focus on creating complete and helpful travel suggestions without overexplaining."
             )
-        })
+        }
+        # Hem DB'ye ekle, hem geçmişin başına koy
+        save_message(username, "system", system_msg["content"])
+        chat_history.insert(0, system_msg)
 
     chat_history.append({"role": "user", "content": user_input})
+    save_message(username, "user", user_input)
 
     ai_reply = ""
     flight_data = []
@@ -92,6 +122,7 @@ def chat():
 
                     reply = "\n".join([f"- {name} ({city}): {desc}" for name, city, desc in result]) if result else "Veritabanında uygun sonuç bulunamadı."
                     chat_history.append({"role": "function", "name": "get_recommended_places", "content": reply})
+                    save_message(username, "function", reply, name="get_recommended_places")
 
                     if from_city and to_city:
                         flight_data = get_flights_by_cities(from_city, to_city)
@@ -107,9 +138,12 @@ def chat():
         ai_reply = f"Hata oluştu: {e}"
 
     chat_history.append({"role": "assistant", "content": ai_reply})
-    session["chat_history"] = chat_history
+    save_message(username, "assistant", ai_reply)
 
     return jsonify({"response": ai_reply, "history": chat_history, "flights": flight_data})
+
+
+
 
 
 @app.route("/hotels", methods=["POST"])
@@ -147,10 +181,14 @@ def api_register():
     data = request.get_json()
     username = data.get("username")
     password = data.get("password")
-    success, msg = register_user(username, password)
+    email = data.get("email")
+    phone = data.get("phone")
+
+    success, msg = register_user(username, password, email, phone)
     if success:
         session["user"] = username
     return jsonify({"success": success, "message": msg})
+
 
 @app.route("/api/login", methods=["POST"])
 def api_login():
@@ -161,6 +199,30 @@ def api_login():
     if success:
         session["user"] = username
     return jsonify({"success": success, "message": msg})
+
+@app.route("/api/history", methods=["GET"])
+def api_history():
+    import sqlite3
+    if "user" not in session:
+        return jsonify({"history": []})
+    username = session["user"]
+
+    def load_user_history(username):
+        conn = sqlite3.connect("users.db")
+        cursor = conn.cursor()
+        cursor.execute("SELECT role, content FROM user_messages WHERE username = ? ORDER BY created_at", (username,))
+        history = []
+        for role, content in cursor.fetchall():
+            if role == "function":
+                history.append({"role": role, "name": "get_recommended_places", "content": content})
+            else:
+                history.append({"role": role, "content": content})
+        conn.close()
+        return history
+
+    chat_history = load_user_history(username)
+    return jsonify({"history": chat_history})
+
 
 @app.route("/api/logout", methods=["POST"])
 def api_logout():
@@ -175,8 +237,14 @@ def check_login():
 
 @app.route("/reset", methods=["GET"])
 def reset():
-    session.pop("chat_history", None)
+    if "user" in session:
+        conn = sqlite3.connect("users.db")
+        cursor = conn.cursor()
+        cursor.execute("DELETE FROM user_messages WHERE username = ?", (session["user"],))
+        conn.commit()
+        conn.close()
     return jsonify({"status": "reset"})
+
 
 if __name__ == "__main__":
     app.run(debug=True)
