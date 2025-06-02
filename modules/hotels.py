@@ -114,7 +114,7 @@ def search_hotels_by_geocode(latitude, longitude):
             data = response.json()
             hotels = data.get("data", [])
             hotel_ids = []
-            for hotel in hotels[:8]:  
+            for hotel in hotels[:3]:  
                 hotel_id = hotel.get("hotelId")
                 if hotel_id:
                     hotel_ids.append(hotel_id)

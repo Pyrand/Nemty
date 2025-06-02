@@ -24,18 +24,26 @@
         </div>
         <form id="login-form" class="auth-form">
           <input type="text" id="login-username" placeholder="Kullanıcı adı" required>
-          <input type="password" id="login-password" placeholder="Şifre" required>
+          <div class="password-wrapper">
+            <input type="password" id="login-password" placeholder="Şifre" required>
+            <button type="button" class="toggle-password" tabindex="-1">&#128065;</button>
+          </div>
           <button type="submit">Giriş Yap</button>
           <div class="auth-message" id="login-message"></div>
         </form>
+
         <form id="register-form" class="auth-form" style="display:none;">
-          <input type="text" id="register-username" placeholder="Kullanıcı adı" required>
-          <input type="email" id="register-email" placeholder="E-posta" required>
-          <input type="tel" id="register-phone" placeholder="Telefon Numarası (isteğe bağlı)">
-          <input type="password" id="register-password" placeholder="Şifre" required>
-          <button type="submit">Kayıt Ol</button>
-          <div class="auth-message" id="register-message"></div>
+            <input type="text" id="register-username" placeholder="Kullanıcı adı" required>
+            <input type="email" id="register-email" placeholder="E-posta" required>
+            <input type="tel" id="register-phone" placeholder="Telefon Numarası (isteğe bağlı)">
+            <div class="password-wrapper">
+              <input type="password" id="register-password" placeholder="Şifre" required>
+              <button type="button" class="toggle-password" tabindex="-1">&#128065;</button>
+            </div>
+            <button type="submit">Kayıt Ol</button>
+            <div class="auth-message" id="register-message"></div>
         </form>
+
       </div>
     </div>
   </div>

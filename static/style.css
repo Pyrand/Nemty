@@ -205,6 +205,43 @@ textarea#message::placeholder {color:var(--text-data-stream);font-weight:400;fon
 #logout-btn:active {transform:translateY(0) scale(1);box-shadow:none;}
 .site-footer .footer-sep {margin:0 10px;color:var(--primary-green-base);opacity:.75;}
 
+.password-wrapper { position: relative; display: flex; align-items: center; }
+.toggle-password {
+  position: absolute;
+  right: 12px; top: 50%; transform: translateY(-50%);
+  background: none; border: none;
+  font-size: 1.2em; color: #888;
+  cursor: pointer; outline: none;
+  padding: 0; margin: 0;
+}
+.toggle-password:active { color: #0056b3; }
+.password-wrapper input { flex: 1; }
+
+.button-loading {
+  position: relative;
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+.button-loading::after {
+  content: "";
+  position: absolute;
+  right: 18px;
+  top: 50%;
+  width: 16px;
+  height: 16px;
+  margin-top: -8px;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  border-top-color: #007BFF;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+
 /* MEDIA QUERIES */
 @media (max-width:1024px) {
     :root {

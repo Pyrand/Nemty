@@ -17,74 +17,118 @@ document.addEventListener("DOMContentLoaded", function() {
     };
 
     // Login formu
-    document.getElementById("login-form").onsubmit = async function(e) {
-        e.preventDefault();
-        const username = document.getElementById("login-username").value;
-        const password = document.getElementById("login-password").value;
-        const res = await fetch("/api/login", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ username, password })
-        });
-        const data = await res.json();
-        document.getElementById("login-message").textContent = data.message;
-        if (data.success) {
-            // Kutuları temizle
-            document.getElementById("login-username").value = "";
-            document.getElementById("login-password").value = "";
-            document.getElementById("login-message").textContent = "";
-            document.getElementById("register-username").value = "";
-            document.getElementById("register-password").value = "";
-            document.getElementById("register-message").textContent = "";
-            showApp();
-        }
+          document.getElementById("login-form").onsubmit = async function(e) {
+              e.preventDefault();
+              const username = document.getElementById("login-username").value;
+              const password = document.getElementById("login-password").value;
+              const msgBox = document.getElementById("login-message");
+              const submitBtn = this.querySelector('button[type="submit"]');
 
-        const messageTextarea = document.getElementById('message');
-        if (messageTextarea) {
-          const initialMinHeight = getComputedStyle(messageTextarea).minHeight;
 
-          const adjustTextareaHeight = () => {
-              messageTextarea.style.height = 'auto';
-              let newHeight = messageTextarea.scrollHeight;
-              messageTextarea.style.height = newHeight + 'px';
+
+              submitBtn.disabled = true;
+              submitBtn.classList.add('button-loading');
+              msgBox.textContent = "";
+
+              try {
+                  const res = await fetch("/api/login", {
+                      method: "POST",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify({ username, password })
+                  });
+                  const data = await res.json();
+
+                  msgBox.textContent = data.message;
+                  if (data.success) {
+                      document.getElementById("login-username").value = "";
+                      document.getElementById("login-password").value = "";
+                      document.getElementById("login-message").textContent = "";
+                      document.getElementById("register-username").value = "";
+                      document.getElementById("register-password").value = "";
+                      document.getElementById("register-message").textContent = "";
+                      showApp();
+                  }
+              } catch (error) {
+                  msgBox.textContent = "Sunucuya bağlanılamadı! Lütfen tekrar deneyin.";
+              } finally {
+                  submitBtn.disabled = false;
+                  submitBtn.classList.remove('button-loading');
+              }
+
+              // Textarea yükseklik ayarı (senin kodunda var diye korudum)
+              const messageTextarea = document.getElementById('message');
+              if (messageTextarea) {
+                const initialMinHeight = getComputedStyle(messageTextarea).minHeight;
+
+                const adjustTextareaHeight = () => {
+                    messageTextarea.style.height = 'auto';
+                    let newHeight = messageTextarea.scrollHeight;
+                    messageTextarea.style.height = newHeight + 'px';
+                };
+
+                messageTextarea.addEventListener('input', adjustTextareaHeight);
+                messageTextarea.style.height = initialMinHeight;
+              }
           };
 
-          messageTextarea.addEventListener('input', adjustTextareaHeight);
-          messageTextarea.style.height = initialMinHeight;
-
-        }
-    };
 
     // Register formu
         // Register formu
-    document.getElementById("register-form").onsubmit = async function(e) {
-        e.preventDefault();
-        const username = document.getElementById("register-username").value;
-        const email = document.getElementById("register-email").value; // YENİ
-        const phone = document.getElementById("register-phone").value; // YENİ
-        const password = document.getElementById("register-password").value;
-        
-        const res = await fetch("/api/register", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ username, email, phone, password }) // email ve phone eklendi
-        });
-        const data = await res.json();
-        document.getElementById("register-message").textContent = data.message;
-        if (data.success) {
-            // Kutuları temizle (hem login hem register)
-            document.getElementById("login-username").value = "";
-            document.getElementById("login-password").value = "";
-            document.getElementById("login-message").textContent = "";
-            
-            document.getElementById("register-username").value = "";
-            document.getElementById("register-email").value = "";    // YENİ
-            document.getElementById("register-phone").value = "";    // YENİ
-            document.getElementById("register-password").value = "";
-            // register-message başarılı kayıt sonrası temizlenebilir veya farklı bir mesaj gösterilebilir
-            // document.getElementById("register-message").textContent = "Kayıt başarılı! Giriş yapabilirsiniz."; 
-        }
-    };
+        document.getElementById("register-form").onsubmit = async function(e) {
+          e.preventDefault();
+          const username = document.getElementById("register-username").value.trim();
+          const email = document.getElementById("register-email").value.trim();
+          const phone = document.getElementById("register-phone").value;
+          const password = document.getElementById("register-password").value;
+          const msgBox = document.getElementById("register-message");
+          const submitBtn = this.querySelector('button[type="submit"]');
+
+          // Validation bloğu
+          if (username.length < 3) {
+              msgBox.textContent = "Kullanıcı adı en az 3 karakter olmalı!";
+              return;
+          }
+          if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
+              msgBox.textContent = "Geçerli bir e-posta adresi girin!";
+              return;
+          }
+          if (password.length < 6) {
+              msgBox.textContent = "Şifre en az 6 karakter olmalı!";
+              return;
+          }
+
+          submitBtn.disabled = true;
+          submitBtn.classList.add('button-loading');
+          msgBox.textContent = "";
+
+          try {
+              const res = await fetch("/api/register", {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({ username, email, phone, password })
+              });
+              const data = await res.json();
+
+              msgBox.textContent = data.message;
+              if (data.success) {
+                  document.getElementById("login-username").value = "";
+                  document.getElementById("login-password").value = "";
+                  document.getElementById("login-message").textContent = "";
+                  document.getElementById("register-username").value = "";
+                  document.getElementById("register-email").value = "";
+                  document.getElementById("register-phone").value = "";
+                  document.getElementById("register-password").value = "";
+              }
+          } catch (error) {
+              msgBox.textContent = "Sunucuya bağlanılamadı! Lütfen tekrar deneyin.";
+          } finally {
+              // Her durumda (başarılı, hatalı, catch çalışsa bile) butonu açar ve animasyonu kaldırır
+              submitBtn.disabled = false;
+              submitBtn.classList.remove('button-loading');
+          }
+      };
+
+
 
     // Çıkış yapmak için (header’a ekleyeceğin bir çıkış butonu için)
     const logoutBtn = document.getElementById("logout-btn");
@@ -150,59 +194,63 @@ async function sendMessage(event) {
     const input = document.querySelector("#message");
     const message = input.value.trim();
     if (message === "") return;
-  
+
+    // Gönder butonunu bul
+    const submitBtn = event.target.querySelector('button[type="submit"]');
+
+    // Buton ve textarea'yı disable et, loading başlat
+    if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.classList.add('button-loading');
+    }
+    input.disabled = true;
+
     addMessageToChat("user", message);
     input.value = "";
     if (input.tagName.toLowerCase() === 'textarea') {
         input.style.height = getComputedStyle(input).minHeight;
     }
-  
+
     const chatBox = document.querySelector(".chat-box");
     const loadingMsg = document.createElement("div");
     loadingMsg.className = "ai";
     loadingMsg.id = "loading-message";
-    loadingMsg.innerHTML = "🤖 <br><em>Thinking...</em>";
+    loadingMsg.innerHTML = `<span style="font-weight: 500; font-size: .96em;">🤖 Nemty</span><br><em>Thinking...</em>`;
     chatBox.appendChild(loadingMsg);
+
     chatBox.scrollTop = chatBox.scrollHeight;
-  
+
     try {
-      const response = await fetch("/chat", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ message: message })
-      });
-  
-      const data = await response.json();
-      console.log("Chat response data:", data); // Debug log
-      
-      // loading mesajını kaldır
-      loadingMsg.remove();
-  
-      addMessageToChat("ai", data.response);
+        const response = await fetch("/chat", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ message: message })
+        });
 
-      // Uçuş sonuçlarını göster
-      if (data.flights && data.flights.length > 0) {
-        showFlights(data.flights);
-        
-        // Uçuş verisi varsa, şehir adını AI yanıtından veya mesajdan çıkarmaya çalış
-        let cityName = extractCityFromMessage(message, data.response);
-        console.log("Extracted city name:", cityName); // Debug log
-        
-        if (cityName) {
-          console.log("Calling showHotels with:", cityName); // Debug log
-          await showHotels(cityName);
-        } else {
-          console.log("No city name extracted for hotels"); // Debug log
+        const data = await response.json();
+        loadingMsg.remove();
+        addMessageToChat("ai", data.response);
+
+        if (data.flights && data.flights.length > 0) {
+            showFlights(data.flights);
+            let cityName = extractCityFromMessage(message, data.response);
+            if (cityName) {
+                await showHotels(cityName);
+            }
         }
-      }
-
     } catch (error) {
-      console.error("Error in sendMessage:", error);
-      loadingMsg.innerHTML = "🤖 <br><em>Bir hata oluştu!</em>";
+        loadingMsg.innerHTML = "🤖 <br><em>Bir hata oluştu!</em>";
+    } finally {
+        if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.classList.remove('button-loading');
+        }
+        input.disabled = false;
     }
-  }
+}
+
 
   // Şehir adını mesajdan veya AI yanıtından çıkaran yardımcı fonksiyon
   function extractCityFromMessage(userMessage, aiResponse) {
@@ -263,18 +311,25 @@ async function sendMessage(event) {
     return null;
   }
   
-  function addMessageToChat(role, content) {
+function addMessageToChat(role, content) {
     const chatBox = document.querySelector(".chat-box");
     const msg = document.createElement("div");
     msg.className = role === "user" ? "user" : "ai";
-  
-    // Emojili, Markdown uyumlu içerik
-    const emoji = role === "user" ? "🧍" : "🤖";
-    msg.innerHTML = `${emoji} <br>${marked.parse(content).replace(/^<p>|<\/p>$/g, '')}`;
-  
+
+    let label = "";
+    if (role === "ai") {
+        label = `<span style="font-weight: 500; font-size: .96em;">🤖 Nemty</span><br>`;
+    } else {
+        label = "";
+    }
+
+    // Kullanıcıda başlık yok, botta başta "🤖 Nemty" var
+    msg.innerHTML = `${label}${marked.parse(content).replace(/^<p>|<\/p>$/g, '')}`;
+
     chatBox.appendChild(msg);
     chatBox.scrollTop = chatBox.scrollHeight;
-  }
+}
+
   
   async function resetChat() {
     await fetch("/reset");
@@ -286,8 +341,12 @@ async function sendMessage(event) {
   }
   
   async function showFlights(flights) {
+    const flightInfoMsg = addInfoMessage("flight");
+
     const flightBox = document.getElementById("flight-results");
     flightBox.innerHTML = "";
+
+    if (flightInfoMsg) flightInfoMsg.remove();
 
     if (!flights || flights.length === 0) {
         flightBox.textContent = "Uçuş bulunamadı.";
@@ -305,44 +364,71 @@ async function sendMessage(event) {
   
   // --- OTEL GÖSTERME FONKSİYONU (DEBUG LOGLARI EKLENDİ) ---
   async function showHotels(city) {
-    console.log(`[DEBUG] showHotels called with city: ${city}`); // Debug log
-    
+    // Oteller aranıyor mesajı göster
+    const hotelInfoMsg = addInfoMessage("hotel");
+
     try {
-      const res = await fetch("/hotels", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ city: city, message: message })
-      });
-      
-      console.log(`[DEBUG] Hotels API response status: ${res.status}`); // Debug log
-      
-      const data = await res.json();
-      console.log("[DEBUG] Hotels API response data:", data); // Debug log
+        const res = await fetch("/hotels", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ city: city, message: message })
+        });
 
-      const box = document.getElementById("hotel-results");
-      if (!box) {
-        console.error("[DEBUG] hotel-results element not found!");
-        return;
-      }
-      
-      box.innerHTML = "";
+        const data = await res.json();
+        const box = document.getElementById("hotel-results");
+        if (!box) return;
 
-      if (!data.hotels || data.hotels.length === 0) {
-          box.textContent = "Otel bulunamadı.";
-          return;
-      }
+        box.innerHTML = "";
 
-      const ul = document.createElement("ul");
-      data.hotels.forEach(hotel => {
-          const li = document.createElement("li");
-          li.textContent = hotel;
-          ul.appendChild(li);
-      });
-      box.appendChild(ul);
-      
-      console.log("[DEBUG] Hotels displayed successfully"); // Debug log
-      
+        if (!data.hotels || data.hotels.length === 0) {
+            box.textContent = "Otel bulunamadı.";
+            return;
+        }
+
+        const ul = document.createElement("ul");
+        data.hotels.forEach(hotel => {
+            const li = document.createElement("li");
+            li.textContent = hotel;
+            ul.appendChild(li);
+        });
+        box.appendChild(ul);
     } catch (error) {
-      console.error("[DEBUG] Error in showHotels:", error);
+        // Hata mesajı
+        const box = document.getElementById("hotel-results");
+        if (box) box.textContent = "Otel arama sırasında bir hata oluştu!";
+    } finally {
+        // Mesajı kaldır
+        if (hotelInfoMsg) hotelInfoMsg.remove();
     }
-  }
+}
+
+
+  document.querySelectorAll(".toggle-password").forEach(function(btn) {
+  btn.addEventListener("click", function() {
+    const input = this.parentElement.querySelector("input");
+    if (input.type === "password") {
+      input.type = "text";
+      this.style.color = "#007BFF";
+    } else {
+      input.type = "password";
+      this.style.color = "#888";
+    }
+  });
+});
+
+
+function addInfoMessage(type) {
+    const chatBox = document.querySelector(".chat-box");
+    const msg = document.createElement("div");
+    msg.className = "ai";
+
+    let text = "";
+    if (type === "flight") text = "<em>Uçuşlar aranıyor...</em>";
+    else if (type === "hotel") text = "<em>Oteller aranıyor...</em>";
+    else text = "<em>Thinking...</em>";
+
+    msg.innerHTML = `<span style="font-weight: 500; font-size: .96em;">🤖 Nemty</span><br>${text}`;
+    chatBox.appendChild(msg);
+    chatBox.scrollTop = chatBox.scrollHeight;
+    return msg;
+}

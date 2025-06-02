@@ -11,6 +11,7 @@ from modules.hotels import get_hotels_by_city, extract_guests_from_message
 from modules.auth import register_user, login_user
 
 
+
 load_dotenv()
 
 app = Flask(__name__)
@@ -30,18 +31,7 @@ def chat():
     username = session["user"]
     user_input = request.json.get("message")
 
-    def load_user_history(username):
-        conn = sqlite3.connect("users.db")
-        cursor = conn.cursor()
-        cursor.execute("SELECT role, content FROM user_messages WHERE username = ? ORDER BY created_at", (username,))
-        history = []
-        for role, content in cursor.fetchall():
-            if role == "function":
-                history.append({"role": role, "name": "get_recommended_places", "content": content})
-            else:
-                history.append({"role": role, "content": content})
-        conn.close()
-        return history
+    from modules.helpers import load_user_history, save_message
 
     def save_message(username, role, content, name=None):
         conn = sqlite3.connect("users.db")
@@ -207,18 +197,7 @@ def api_history():
         return jsonify({"history": []})
     username = session["user"]
 
-    def load_user_history(username):
-        conn = sqlite3.connect("users.db")
-        cursor = conn.cursor()
-        cursor.execute("SELECT role, content FROM user_messages WHERE username = ? ORDER BY created_at", (username,))
-        history = []
-        for role, content in cursor.fetchall():
-            if role == "function":
-                history.append({"role": role, "name": "get_recommended_places", "content": content})
-            else:
-                history.append({"role": role, "content": content})
-        conn.close()
-        return history
+    from modules.helpers import load_user_history, save_message
 
     chat_history = load_user_history(username)
     return jsonify({"history": chat_history})

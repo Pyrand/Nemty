@@ -1,8 +1,2 @@
 .env
 *.db
-fetch_otm_data.py
-old_app.py
-test.py
-users.db
-destinations.db
-word_cities.json
