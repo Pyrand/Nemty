@@ -11,12 +11,11 @@ def register_user(username, password, email=None, phone=None):
             (username, password_hash, email, phone)
         )
         conn.commit()
-        return True, "Kayıt başarılı!"
+        return True, "Registration successful!"
     except sqlite3.IntegrityError:
-        return False, "Bu kullanıcı adı zaten alınmış."
+        return False, "This username is already taken."
     finally:
         conn.close()
-
 
 def login_user(username, password):
     conn = sqlite3.connect("users.db")
@@ -25,6 +24,6 @@ def login_user(username, password):
     row = cursor.fetchone()
     conn.close()
     if row and check_password_hash(row[0], password):
-        return True, "Giriş başarılı!"
+        return True, "Login successful!"
     else:
-        return False, "Kullanıcı adı veya şifre hatalı."
+        return False, "Incorrect username or password."

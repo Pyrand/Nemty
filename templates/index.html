@@ -1,96 +1,151 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Nemty: Seyahat Danışmanı</title>
+  <title>Nemty: Travel Assistant</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
   <script defer src="{{ url_for('static', filename='script.js') }}"></script>
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
 <body>
 
-  <!-- Giriş/Kayıt Alanı -->
-  <div id="auth-area">
-    <div class="auth-container">
-      <div class="auth-welcome-section">
-        <h1>Welcome to Nemty</h1>
-        <p>Your AI Travel Agent</p>
+  <!-- Auth Area -->
+<div id="auth-area" style="min-height:100vh;">
+  <div class="auth-container">
+    <!-- SOL: Marka Alanı -->
+    <div class="auth-hero-section">
+      <div class="auth-logo">Nemty <span class="logo-dot"></span></div>
+      <div class="auth-slogan">Your AI Travel Agent</div>
+      <ul class="auth-benefits">
+        <li>Personalized plans in seconds</li>
+        <li>Smart hotel & flight search</li>
+        <li>Simple. Fast. Free.</li>
+      </ul>
+      <!-- Hafif bir seyahat illüstrasyonu eklemek istersen: -->
+      <img src="https://cdn.pixabay.com/photo/2017/01/31/19/15/airplane-2027827_1280.png" alt="Travel" class="auth-illustration">
+    </div>
+    <!-- SAĞ: Login/Register Kartı -->
+    <div class="auth-forms-section">
+      <div class="auth-tabs">
+        <button id="login-tab" class="active">Login</button>
+        <button id="register-tab">Sign Up</button>
       </div>
-      <div class="auth-forms-section">
-        <div class="auth-tabs">
-          <button id="login-tab" class="active">Giriş Yap</button>
-          <button id="register-tab">Kayıt Ol</button>
+      <form id="login-form" class="auth-form">
+        <input type="text" id="login-username" placeholder="Username" required>
+        <div class="password-wrapper">
+          <input type="password" id="login-password" placeholder="Password" required>
+          <button type="button" class="toggle-password" tabindex="-1">&#128065;</button>
         </div>
-        <form id="login-form" class="auth-form">
-          <input type="text" id="login-username" placeholder="Kullanıcı adı" required>
-          <div class="password-wrapper">
-            <input type="password" id="login-password" placeholder="Şifre" required>
-            <button type="button" class="toggle-password" tabindex="-1">&#128065;</button>
-          </div>
-          <button type="submit">Giriş Yap</button>
-          <div class="auth-message" id="login-message"></div>
-        </form>
-
-        <form id="register-form" class="auth-form" style="display:none;">
-            <input type="text" id="register-username" placeholder="Kullanıcı adı" required>
-            <input type="email" id="register-email" placeholder="E-posta" required>
-            <input type="tel" id="register-phone" placeholder="Telefon Numarası (isteğe bağlı)">
-            <div class="password-wrapper">
-              <input type="password" id="register-password" placeholder="Şifre" required>
-              <button type="button" class="toggle-password" tabindex="-1">&#128065;</button>
-            </div>
-            <button type="submit">Kayıt Ol</button>
-            <div class="auth-message" id="register-message"></div>
-        </form>
-
-      </div>
+        <button type="submit">Login</button>
+        <div class="auth-message" id="login-message"></div>
+      </form>
+      <form id="register-form" class="auth-form" style="display:none;">
+        <input type="text" id="register-username" placeholder="Username" required>
+        <input type="email" id="register-email" placeholder="E-mail" required>
+        <input type="tel" id="register-phone" placeholder="Phone Number (optional)">
+        <div class="password-wrapper">
+          <input type="password" id="register-password" placeholder="Password" required>
+          <button type="button" class="toggle-password" tabindex="-1">&#128065;</button>
+        </div>
+        <button type="submit">Sign Up</button>
+        <div class="auth-message" id="register-message"></div>
+      </form>
+      <!-- DEMO hesabı eklemek istersen -->
+      <!-- <button class="demo-login" onclick="demoLogin()">Try Demo Account</button> -->
     </div>
   </div>
+</div>
 
-  <!-- Ana Uygulama Alanı -->
+
+  <!-- Main App Area with SPA Sections -->
   <div id="main-app-area" style="display:none;">
     <header class="site-header">
-      <span id="welcome-user"></span>
-      <button id="logout-btn">Çıkış</button>
-    </header>
-    <div class="app-wrapper">
-      <div class="app-container">
-        <!-- SOL: Chat Alanı -->
-        <div class="chat-main-area">
-          <div class="chat-module">
-            <div class="chat-box"></div>
-            <form onsubmit="sendMessage(event)">
-              <textarea id="message" placeholder="Mesajınızı yazın..." autocomplete="off" rows="1"></textarea>
-              <button type="submit">Gönder</button>
-            </form>
-            <button class="reset-button" onclick="resetChat()">Sıfırla</button>
-          </div>
-        </div>
-        <!-- SAĞ: Sidebar -->
-        <div class="sidebar-info-area">
-          <div class="info-panel">
-            <div class="info-box">
-              <strong>Uçuş Sonuçları</strong>
-              <div id="flight-results"></div>
+  <div class="header-left">
+    <div class="logo">
+      Nemty
+      <span class="logo-dot"></span>
+    </div>
+    <span id="welcome-user"></span>
+  </div>
+  <div class="header-right">
+    <nav class="site-nav">
+      <button class="nav-link active" onclick="showSection('home', this)">Home</button>
+      <button class="nav-link" onclick="showSection('blog', this)">Blog</button>
+      <button class="nav-link" onclick="showSection('about', this)">About</button>
+    </nav>
+    <button id="logout-btn">Logout</button>
+  </div>
+</header>
+
+    <!-- SPA Content Sections -->
+    <div id="section-home" class="section-content">
+      <div class="app-wrapper">
+        <div class="app-container">
+          <!-- LEFT: Chat Area -->
+          <div class="chat-main-area">
+            <div class="chat-module">
+              <div class="chat-box"></div>
+              <form onsubmit="sendMessage(event)">
+                <textarea id="message" placeholder="Type your message..." autocomplete="off" rows="1"></textarea>
+                <button type="submit">Send</button>
+              </form>
+              <button class="reset-button" onclick="resetChat()">Reset</button>
             </div>
-            <div class="info-box">
-              <strong>Otel Sonuçları</strong>
-              <div id="hotel-results"></div>
+          </div>
+          <!-- RIGHT: Sidebar -->
+          <div class="sidebar-info-area">
+            <div class="info-panel">
+              <div class="info-box">
+                <strong>Flight Results</strong>
+                <div id="flight-results"></div>
+              </div>
+              <div class="info-box">
+                <strong>Hotel Results</strong>
+                <div id="hotel-results"></div>
+              </div>
             </div>
           </div>
         </div>
       </div>
+    </div>
+    <div id="section-blog" class="section-content" style="display:none;">
+      <h2 style="font-family: 'Orbitron', sans-serif;">Blog</h2>
+      <p>Travel tips, news, and stories coming soon...</p>
+    </div>
+    <div id="section-about" class="section-content" style="display:none;">
+      <h2 style="font-family: 'Orbitron', sans-serif;">About Nemty</h2>
+      <p>
+        Nemty is your personal AI-powered travel agent, designed to help you plan and book trips easily.<br>
+        <b>Created by Kerem Bürkük – 2025 Graduation Project</b>
+      </p>
     </div>
   </div>
 
   <footer class="site-footer">
-      <div>
-        <span>© 2025 Nemty. All rights reserved.</span>
-        <span class="footer-sep">|</span>
-        <span>Made with <span style="color: var(--primary-green-glow);">♥</span> by Kerem Bürkük</span>
-      </div>
+    <div>
+      <span>© 2025 Nemty. All rights reserved.</span>
+      <span class="footer-sep">|</span>
+      <span>Made with <span style="color: var(--primary-green-glow);">♥</span> by Kerem Bürkük</span>
+    </div>
   </footer>
 
+  <script>
+    // SPA Section Geçiş Fonksiyonu
+    function showSection(section, btn) {
+      document.querySelectorAll('.section-content').forEach(div => div.style.display = 'none');
+      document.getElementById('section-' + section).style.display = '';
+
+      // Navigation'da aktif buton vurgusu
+      if (btn) {
+        document.querySelectorAll('.nav-link').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+      }
+    }
+    // Otomatik olarak Home'u aç (JS yüklenince)
+    document.addEventListener("DOMContentLoaded", function() {
+      showSection('home', document.querySelector('.nav-link'));
+    });
+  </script>
 </body>
 </html>

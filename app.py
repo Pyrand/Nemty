@@ -3,14 +3,12 @@ from flask import Flask, render_template, request, jsonify, session
 from flask_session import Session
 import os
 from dotenv import load_dotenv
-from modules.helpers import print_error
+from modules.helpers import print_error, save_message, load_user_history
 from modules.database import query_local_database, fetch_from_opentripmap, get_recommended_places
 from modules.ai_tools import client, create_completion
 from modules.flights import get_flights_by_cities
 from modules.hotels import get_hotels_by_city, extract_guests_from_message
 from modules.auth import register_user, login_user
-
-
 
 load_dotenv()
 
@@ -24,27 +22,15 @@ def index():
 
 @app.route("/chat", methods=["POST"])
 def chat():
-    import sqlite3
     if "user" not in session:
-        return jsonify({"response": "Giriş yapılmamış.", "flights": []})
+        return jsonify({"response": "Not logged in.", "flights": []})
 
     username = session["user"]
     user_input = request.json.get("message")
 
-    from modules.helpers import load_user_history, save_message
-
-    def save_message(username, role, content, name=None):
-        conn = sqlite3.connect("users.db")
-        cursor = conn.cursor()
-        if name:
-            content = f"[{name}] {content}"
-        cursor.execute("INSERT INTO user_messages (username, role, content) VALUES (?, ?, ?)", (username, role, content))
-        conn.commit()
-        conn.close()
-
     chat_history = load_user_history(username)
 
-    # 🔥 SYSTEM PROMPT SADECE 1 KERE EKLENİR!
+    # 🔥 SYSTEM PROMPT IS ONLY ADDED ONCE!
     if not any(msg.get("role") == "system" for msg in chat_history):
         system_msg = {
             "role": "system",
@@ -62,7 +48,7 @@ def chat():
                 "Focus on creating complete and helpful travel suggestions without overexplaining."
             )
         }
-        # Hem DB'ye ekle, hem geçmişin başına koy
+        # Add to DB and at the beginning of history
         save_message(username, "system", system_msg["content"])
         chat_history.insert(0, system_msg)
 
@@ -110,13 +96,14 @@ def chat():
 
                     result = get_recommended_places(city_preference=to_city, category_preference=category)
 
-                    reply = "\n".join([f"- {name} ({city}): {desc}" for name, city, desc in result]) if result else "Veritabanında uygun sonuç bulunamadı."
+                    reply = "\n".join([f"- {name} ({city}): {desc}" for name, city, desc in result]) if result else "No suitable results found in the database."
                     chat_history.append({"role": "function", "name": "get_recommended_places", "content": reply})
                     save_message(username, "function", reply, name="get_recommended_places")
 
                     if from_city and to_city:
                         flight_data = get_flights_by_cities(from_city, to_city)
-                        print(f"[DEBUG] Uçuş verileri: {flight_data}")
+                        save_message(username, "flight_results", "\n".join(flight_data))
+                        print(f"[DEBUG] Flight data: {flight_data}")
 
                     completion = create_completion(messages=chat_history)
                     ai_reply = completion.choices[0].message.content
@@ -125,16 +112,12 @@ def chat():
             ai_reply = response_msg.content
 
     except Exception as e:
-        ai_reply = f"Hata oluştu: {e}"
+        ai_reply = f"An error occurred: {e}"
 
     chat_history.append({"role": "assistant", "content": ai_reply})
     save_message(username, "assistant", ai_reply)
 
     return jsonify({"response": ai_reply, "history": chat_history, "flights": flight_data})
-
-
-
-
 
 @app.route("/hotels", methods=["POST"])
 def hotels():
@@ -150,7 +133,7 @@ def hotels():
 
         if not city:
             print("[DEBUG] No city provided")
-            return jsonify({"hotels": ["Şehir adı belirtilmedi."]})
+            return jsonify({"hotels": ["City name not specified."]})
 
         adults, children = extract_guests_from_message(user_message)
         print(f"[DEBUG] Extracted adults: {adults}, children: {children}")
@@ -159,11 +142,15 @@ def hotels():
         hotels_result = get_hotels_by_city(city, adults=adults, children=children)
         print(f"[DEBUG] Hotels result: {hotels_result}")
 
+        # === BURADA SONUÇLARI KAYDET ===
+        if "user" in session and hotels_result:
+            save_message(session["user"], "hotel_results", "\n".join(hotels_result))
+
         return jsonify({"hotels": hotels_result})
 
     except Exception as e:
         print(f"[DEBUG] Error in /hotels endpoint: {e}")
-        return jsonify({"hotels": [f"Hata oluştu: {str(e)}"]})
+        return jsonify({"hotels": [f"An error occurred: {str(e)}"]})
 
 
 @app.route("/api/register", methods=["POST"])
@@ -178,7 +165,6 @@ def api_register():
     if success:
         session["user"] = username
     return jsonify({"success": success, "message": msg})
-
 
 @app.route("/api/login", methods=["POST"])
 def api_login():
@@ -202,7 +188,6 @@ def api_history():
     chat_history = load_user_history(username)
     return jsonify({"history": chat_history})
 
-
 @app.route("/api/logout", methods=["POST"])
 def api_logout():
     session.pop("user", None)
@@ -211,8 +196,6 @@ def api_logout():
 @app.route("/api/check-login")
 def check_login():
     return jsonify({"logged_in": "user" in session, "user": session.get("user")})
-
-
 
 @app.route("/reset", methods=["GET"])
 def reset():
@@ -223,7 +206,6 @@ def reset():
         conn.commit()
         conn.close()
     return jsonify({"status": "reset"})
-
 
 if __name__ == "__main__":
     app.run(debug=True)
