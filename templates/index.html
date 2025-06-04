@@ -11,21 +11,12 @@
 <body>
 
   <!-- Auth Area -->
-<div id="auth-area" style="min-height:100vh;">
+<div id="auth-area">
   <div class="auth-container">
-    <!-- SOL: Marka Alanı -->
-    <div class="auth-hero-section">
-      <div class="auth-logo">Nemty <span class="logo-dot"></span></div>
-      <div class="auth-slogan">Your AI Travel Agent</div>
-      <ul class="auth-benefits">
-        <li>Personalized plans in seconds</li>
-        <li>Smart hotel & flight search</li>
-        <li>Simple. Fast. Free.</li>
-      </ul>
-      <!-- Hafif bir seyahat illüstrasyonu eklemek istersen: -->
-      <img src="https://cdn.pixabay.com/photo/2017/01/31/19/15/airplane-2027827_1280.png" alt="Travel" class="auth-illustration">
+    <div class="auth-welcome-section">
+      <h1>Welcome to Nemty</h1>
+      <p>Your AI Travel Agent</p>
     </div>
-    <!-- SAĞ: Login/Register Kartı -->
     <div class="auth-forms-section">
       <div class="auth-tabs">
         <button id="login-tab" class="active">Login</button>
@@ -51,33 +42,61 @@
         <button type="submit">Sign Up</button>
         <div class="auth-message" id="register-message"></div>
       </form>
-      <!-- DEMO hesabı eklemek istersen -->
-      <!-- <button class="demo-login" onclick="demoLogin()">Try Demo Account</button> -->
+    </div>
+  </div>
+
+  <!-- ALTTA NEDEN NEMTY KUTULARI -->
+  <div class="why-nemty-section">
+    <h2>Why Nemty?</h2>
+    <div class="why-nemty-grid">
+      <div class="feature-card">
+        <div class="feature-icon">🧭</div>
+        <div class="feature-title">Personalized Itineraries</div>
+        <div class="feature-desc">Nemty offers trip plans tailored just for you, based on your interests, budget, and style.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">✈️</div>
+        <div class="feature-title">Instant Flight & Hotel Search</div>
+        <div class="feature-desc">Find the best flights and hotels in seconds—no need to open extra tabs.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🤖</div>
+        <div class="feature-title">Powered by AI</div>
+        <div class="feature-desc">Built as a graduation project with the latest AI, Nemty is smart, fast, and always improving.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🔒</div>
+        <div class="feature-title">Privacy First</div>
+        <div class="feature-desc">Your data is protected. Nemty never shares your info with third parties.</div>
+      </div>
+    </div>
+    <div class="why-nemty-extra">
+      <b>Nemty</b> is your all-in-one travel assistant. Designed for students, travelers, and explorers who want to save time, find deals, and get inspired!
     </div>
   </div>
 </div>
 
 
+
   <!-- Main App Area with SPA Sections -->
   <div id="main-app-area" style="display:none;">
-    <header class="site-header">
-  <div class="header-left">
-    <div class="logo">
-      Nemty
-      <span class="logo-dot"></span>
-    </div>
-    <span id="welcome-user"></span>
-  </div>
-  <div class="header-right">
-    <nav class="site-nav">
-      <button class="nav-link active" onclick="showSection('home', this)">Home</button>
-      <button class="nav-link" onclick="showSection('blog', this)">Blog</button>
-      <button class="nav-link" onclick="showSection('about', this)">About</button>
-    </nav>
-    <button id="logout-btn">Logout</button>
-  </div>
-</header>
-
+      <header class="site-header">
+      <div class="header-left">
+        <div class="logo">
+          Nemty
+          <span class="logo-dot"></span>
+        </div>
+        <span id="welcome-user"></span>
+      </div>
+      <div class="header-right">
+        <nav class="site-nav">
+          <button class="nav-link active" onclick="showSection('home', this)">Home</button>
+          <button class="nav-link" onclick="showSection('blog', this)">Blog</button>
+          <button class="nav-link" onclick="showSection('about', this)">About</button>
+        </nav>
+        <button id="logout-btn">Logout</button>
+      </div>
+    </header>
     <!-- SPA Content Sections -->
     <div id="section-home" class="section-content">
       <div class="app-wrapper">
