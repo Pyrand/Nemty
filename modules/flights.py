@@ -32,17 +32,17 @@ def get_icao_list_by_city(city_name):
 
 
 def get_flights_by_cities(from_city, to_city):
-    print(f"[DEBUG] Gelen şehirler → from_city: {from_city}, to_city: {to_city}")
+    print(f"[DEBUG] Incoming cities → from_city: {from_city}, to_city: {to_city}")
 
     from_icao_list = get_icao_list_by_city(from_city)
     to_icao_list = get_icao_list_by_city(to_city)
 
-    print(f"[DEBUG] ICAO Kodları → from: {from_icao_list}, to: {to_icao_list}")
+    print(f"[DEBUG] ICAO Codes → from: {from_icao_list}, to: {to_icao_list}")
 
     if not from_icao_list:
-        return [f"'{from_city}' için ICAO kodu bulunamadı."]
+        return [f"No ICAO code found for '{from_city}'."]
     if not to_icao_list:
-        return [f"'{to_city}' için ICAO kodu bulunamadı."]
+        return [f"No ICAO code found for '{to_city}'."]
 
     now = datetime.utcnow()
     start_time = now.strftime("%Y-%m-%dT%H:00")
@@ -72,17 +72,17 @@ def get_flights_by_cities(from_city, to_city):
             part = response.json().get("departures", [])
             flights.extend(part)
 
-    #print(f"[DEBUG] Toplam gelen uçuş sayısı: {len(flights)}")
+    #print(f"[DEBUG] Total number of flights received: {len(flights)}")
 
     for f in flights:
         try:
             flight_number = f.get("number", "N/A")
-            dep = f.get("departure", {}).get("airport", {}).get("name", "Yok")
-            arr = f.get("arrival", {}).get("airport", {}).get("name", "Yok")
-            arr_icao = f.get("arrival", {}).get("airport", {}).get("icao", "Yok")
+            dep = f.get("departure", {}).get("airport", {}).get("name", "None")
+            arr = f.get("arrival", {}).get("airport", {}).get("name", "None")
+            arr_icao = f.get("arrival", {}).get("airport", {}).get("icao", "None")
             #print(f"[DEBUG] {flight_number}: {dep} → {arr} ({arr_icao})")
         except Exception as e:
-            print(f"[Uçuş log hatası] {e}")
+            print(f"[Flight log error] {e}")
 
     filtered = []
     for f in flights:
@@ -92,22 +92,22 @@ def get_flights_by_cities(from_city, to_city):
         if any(to.lower() == arrival_icao for to in to_icao_list) or \
            any(to_city.lower() in field for field in [arrival_city, arrival_name]):
             filtered.append(f)
-            
+
     filtered = filtered[:3]
 
     results = []
     for flight in filtered:
-        airline = flight.get("airline", {}).get("name", "Bilinmiyor")
+        airline = flight.get("airline", {}).get("name", "Unknown")
         flight_number = flight.get("number", "N/A")
-        
+
         departure_info = flight.get("departure", {})
         scheduled_time = departure_info.get("scheduledTime", {})
         departure_time = (
             scheduled_time.get("local") or
             scheduled_time.get("utc") or
-            "Kalkış saati bulunamadı"
-    )
-        
-    results.append(f"{airline} {flight_number} - \n Kalkış: {departure_time}")
+            "Departure time not found"
+        )
 
-    return results or [f"{from_city.title()} → {to_city.title()} için uçuş bulunamadı."]
+        results.append(f"{airline} {flight_number} - \n Departure: {departure_time}")
+
+    return results or [f"No flights found for {from_city.title()} → {to_city.title()}."]

@@ -28,9 +28,9 @@ def chat():
     username = session["user"]
     user_input = request.json.get("message")
 
-    chat_history = load_user_history(username)
+    chat_history = load_user_history(username, for_model=True)
 
-    # 🔥 SYSTEM PROMPT IS ONLY ADDED ONCE!
+
     if not any(msg.get("role") == "system" for msg in chat_history):
         system_msg = {
             "role": "system",
@@ -46,9 +46,10 @@ def chat():
                 "You are allowed to supplement your response by suggesting additional places based on your own knowledge of the city and category. "
                 "If no places are available at all, you may politely inform the user that no suggestions were found. "
                 "Focus on creating complete and helpful travel suggestions without overexplaining."
+                "Do not ever translate your response or change the language. If the user's message is in English, always answer in English. If the user's message is in Turkish, always answer in Turkish. Never reply in a different language."
             )
         }
-        # Add to DB and at the beginning of history
+        
         save_message(username, "system", system_msg["content"])
         chat_history.insert(0, system_msg)
 
@@ -114,10 +115,12 @@ def chat():
     except Exception as e:
         ai_reply = f"An error occurred: {e}"
 
-    chat_history.append({"role": "assistant", "content": ai_reply})
     save_message(username, "assistant", ai_reply)
 
-    return jsonify({"response": ai_reply, "history": chat_history, "flights": flight_data})
+    # --- FRONTEND’E GÖNDERMEK İÇİN TÜM GEÇMİŞİ AL ---
+    user_history = load_user_history(username, for_model=False)
+
+    return jsonify({"response": ai_reply, "history": user_history, "flights": flight_data})
 
 @app.route("/hotels", methods=["POST"])
 def hotels():
@@ -178,15 +181,40 @@ def api_login():
 
 @app.route("/api/history", methods=["GET"])
 def api_history():
-    import sqlite3
     if "user" not in session:
-        return jsonify({"history": []})
+        return jsonify({"history": [], "flights": [], "hotels": []})
     username = session["user"]
 
-    from modules.helpers import load_user_history, save_message
+    from modules.helpers import load_user_history
 
-    chat_history = load_user_history(username)
-    return jsonify({"history": chat_history})
+    chat_history = load_user_history(username, for_model=False)
+
+    # Son eklenen uçuş ve otel sonuçlarını getir
+    conn = sqlite3.connect("users.db")
+    cursor = conn.cursor()
+    cursor.execute("""
+        SELECT content FROM user_messages
+        WHERE username = ? AND role = 'flight_results'
+        ORDER BY created_at DESC LIMIT 1
+    """, (username,))
+    flight_row = cursor.fetchone()
+    flight_results = flight_row[0].split('\n') if flight_row else []
+
+    cursor.execute("""
+        SELECT content FROM user_messages
+        WHERE username = ? AND role = 'hotel_results'
+        ORDER BY created_at DESC LIMIT 1
+    """, (username,))
+    hotel_row = cursor.fetchone()
+    hotel_results = hotel_row[0].split('\n') if hotel_row else []
+
+    conn.close()
+    return jsonify({
+        "history": chat_history,
+        "flights": flight_results,
+        "hotels": hotel_results
+    })
+
 
 @app.route("/api/logout", methods=["POST"])
 def api_logout():

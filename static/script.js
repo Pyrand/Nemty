@@ -133,6 +133,9 @@ document.addEventListener("DOMContentLoaded", function() {
             document.querySelector(".chat-box").innerHTML = "";
         };
     }
+
+    
+
 });
 
 function showApp() {
@@ -151,24 +154,27 @@ function showApp() {
                     .then(res => res.json())
                     .then(data => {
                         const chatBox = document.querySelector(".chat-box");
-                            chatBox.innerHTML = "";
+                        chatBox.innerHTML = "";
 
+                        document.getElementById("flight-results").innerHTML = "";
+                        const hotelResults = document.getElementById("hotel-results");
+                        if (hotelResults) hotelResults.innerHTML = "";
 
-                            document.getElementById("flight-results").innerHTML = "";
-                            const hotelResults = document.getElementById("hotel-results");
-                            if (hotelResults) hotelResults.innerHTML = "";
+                        if (data.history && data.history.length > 0) {
+                            data.history.forEach(msg => {
+                                if (msg.role === "user" || msg.role === "assistant") {
+                                    addMessageToChat(msg.role, msg.content);
+                                }
+                            });
+                        }
 
-                            if (data.history && data.history.length > 0) {
-                                data.history.forEach(msg => {
-                                    if (msg.role === "user" || msg.role === "assistant") {
-                                        addMessageToChat(msg.role, msg.content);
-                                    } else if (msg.role === "flight_results") {
-                                        showFlights(typeof msg.content === "string" ? msg.content.split("\n") : msg.content);
-                                    } else if (msg.role === "hotel_results") {
-                                        showHotelsStatic(typeof msg.content === "string" ? msg.content.split("\n") : msg.content);
-                                    }
-                                });
-                            }
+                        // YENİ: Flight ve Hotel sonuçlarını doldur
+                        if (data.flights && data.flights.length > 0) {
+                            showFlights(data.flights);
+                        }
+                        if (data.hotels && data.hotels.length > 0) {
+                            showHotelsStatic(data.hotels);
+                        }
                     });
             } else {
                 welcomeDiv.textContent = "";
@@ -441,3 +447,19 @@ function addInfoMessage(type) {
     chatBox.scrollTop = chatBox.scrollHeight;
     return msg;
 }
+
+
+function showSection(section, btn) {
+      document.querySelectorAll('.section-content').forEach(div => div.style.display = 'none');
+      document.getElementById('section-' + section).style.display = '';
+
+      // Navigation'da aktif buton vurgusu
+      if (btn) {
+        document.querySelectorAll('.nav-link').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+      }
+    }
+    // Otomatik olarak Home'u aç (JS yüklenince)
+    document.addEventListener("DOMContentLoaded", function() {
+      showSection('home', document.querySelector('.nav-link'));
+    });
