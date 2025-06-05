@@ -27,9 +27,7 @@ def chat():
 
     username = session["user"]
     user_input = request.json.get("message")
-
     chat_history = load_user_history(username, for_model=True)
-
 
     if not any(msg.get("role") == "system" for msg in chat_history):
         system_msg = {
@@ -49,7 +47,6 @@ def chat():
                 "Do not ever translate your response or change the language. If the user's message is in English, always answer in English. If the user's message is in Turkish, always answer in Turkish. Never reply in a different language."
             )
         }
-        
         save_message(username, "system", system_msg["content"])
         chat_history.insert(0, system_msg)
 
@@ -93,8 +90,6 @@ def chat():
                     to_city = args.get("city_preference", "").strip()
                     category = args.get("category_preference", "").strip()
 
-                    print(f"[DEBUG] from_city: {from_city}, to_city: {to_city}")
-
                     result = get_recommended_places(city_preference=to_city, category_preference=category)
 
                     reply = "\n".join([f"- {name} ({city}): {desc}" for name, city, desc in result]) if result else "No suitable results found in the database."
@@ -104,7 +99,6 @@ def chat():
                     if from_city and to_city:
                         flight_data = get_flights_by_cities(from_city, to_city)
                         save_message(username, "flight_results", "\n".join(flight_data))
-                        print(f"[DEBUG] Flight data: {flight_data}")
 
                     completion = create_completion(messages=chat_history)
                     ai_reply = completion.choices[0].message.content
@@ -116,45 +110,30 @@ def chat():
         ai_reply = f"An error occurred: {e}"
 
     save_message(username, "assistant", ai_reply)
-
-    # --- FRONTEND’E GÖNDERMEK İÇİN TÜM GEÇMİŞİ AL ---
     user_history = load_user_history(username, for_model=False)
 
     return jsonify({"response": ai_reply, "history": user_history, "flights": flight_data})
 
 @app.route("/hotels", methods=["POST"])
 def hotels():
-    print("[DEBUG] /hotels endpoint called")
     try:
         request_data = request.get_json()
-        print(f"[DEBUG] Request data: {request_data}")
-
         city = request_data.get("city") if request_data else None
         user_message = request_data.get("message") if request_data else ""
-        print(f"[DEBUG] Extracted city: {city}")
-        print(f"[DEBUG] Extracted message: {user_message}")
 
         if not city:
-            print("[DEBUG] No city provided")
             return jsonify({"hotels": ["City name not specified."]})
 
         adults, children = extract_guests_from_message(user_message)
-        print(f"[DEBUG] Extracted adults: {adults}, children: {children}")
-
-        print(f"[DEBUG] Calling get_hotels_by_city with: {city}")
         hotels_result = get_hotels_by_city(city, adults=adults, children=children)
-        print(f"[DEBUG] Hotels result: {hotels_result}")
 
-        # === BURADA SONUÇLARI KAYDET ===
         if "user" in session and hotels_result:
             save_message(session["user"], "hotel_results", "\n".join(hotels_result))
 
         return jsonify({"hotels": hotels_result})
 
     except Exception as e:
-        print(f"[DEBUG] Error in /hotels endpoint: {e}")
         return jsonify({"hotels": [f"An error occurred: {str(e)}"]})
-
 
 @app.route("/api/register", methods=["POST"])
 def api_register():
@@ -185,11 +164,8 @@ def api_history():
         return jsonify({"history": [], "flights": [], "hotels": []})
     username = session["user"]
 
-    from modules.helpers import load_user_history
-
     chat_history = load_user_history(username, for_model=False)
 
-    # Son eklenen uçuş ve otel sonuçlarını getir
     conn = sqlite3.connect("users.db")
     cursor = conn.cursor()
     cursor.execute("""
@@ -214,7 +190,6 @@ def api_history():
         "flights": flight_results,
         "hotels": hotel_results
     })
-
 
 @app.route("/api/logout", methods=["POST"])
 def api_logout():

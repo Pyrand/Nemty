@@ -1,46 +1,36 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Orbitron:wght@500;700&display=swap');
 
 :root {
-    /* Klinik Beyaz & Metalik Vurgu (Canlı Mavi ile) - YENİ TASARIM */
     --primary-green-glow: #007BFF;
     --primary-green-base: #0056b3;
     --primary-green-dark: #004085;
-
     --bg-abyss: #F0F2F5; 
     --bg-matrix-dark: #FFFFFF; 
     --bg-glass-surface: rgba(255, 255, 255, 0.8); 
     --bg-input-field: #FFFFFF;
     --bg-chat-module-inner: #F8F9FA; 
-    
     --text-cyber-light: #1d2129; 
     --text-mech-gray: #4b5563; 
     --text-data-stream: #6b7280; 
     --text-on-primary-accent: #FFFFFF;
-
     --user-message-bg: linear-gradient(145deg, var(--primary-green-base), var(--primary-green-glow));
     --user-message-text: var(--text-on-primary-accent);
-    
     --ai-message-bg: #eef2f7; 
     --ai-message-text: var(--text-cyber-light);
-
     --border-grid-line: #e5e7eb;   
     --border-input: #d1d5db;
     --border-accent-subtle: rgba(0, 123, 255, 0.25);
-    
     --shadow-soft-xl: 0 20px 50px -10px rgba(0, 0, 0, 0.08); 
     --shadow-card: 0 8px 16px -4px rgba(0, 0, 0, 0.06);   
     --shadow-interactive: 0px 4px 10px rgba(0, 123, 255, 0.12);
-
     --border-radius-sharp: 8px;  
     --border-radius-subtle: 12px;
     --border-radius-pill: 9999px; 
-
-    --header-height: 68px; /* site-header padding + border */
-    --footer-height: 53px; /* site-footer padding + border */
-    --app-wrapper-padding-top-bottom: 80px; /* app-wrapper dikey padding toplamı (40px + 40px) */
+    --header-height: 68px;
+    --footer-height: 53px;
+    --app-wrapper-padding-top-bottom: 80px;
 }
 
-/* Keyframes for animations */
 @keyframes slideInFromLeft {0%{transform:translateX(-80px);opacity:0}100%{transform:translateX(0);opacity:1}}
 @keyframes fadeInScaleUp {0%{opacity:0;transform:scale(.95) translateY(10px)}100%{opacity:1;transform:scale(1) translateY(0)}}
 
@@ -57,10 +47,8 @@ body {
     line-height: 1.65;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    /* overflow-x: hidden; Bu kalabilir, ama #auth-area'da dikey scroll olacak */
 }
 
-/* --- AUTHENTICATION AREA STYLES --- */
 .auth-container-centered {
   display: flex;
   flex-direction: column;
@@ -79,46 +67,43 @@ body {
   gap: 70px;
   background-color: transparent;
   max-width: 950px;
-  width: 100%; /* .auth-initial-view içindeki alana göre %100 */
-  /* padding: 70px 0 0 0; GÜNCELLENDİ: Kaldırıldı veya azaltıldı, .auth-initial-view padding sağlar */
-  padding: 0; /* Veya ihtiyaca göre iç boşluk verilebilir, örneğin 20px */
-  margin: 0; /* GÜNCELLENDİ: margin-top kaldırıldı, ortalama flex ile sağlanıyor */
+  width: 100%;
+  padding: 0;
+  margin: 0;
   border: none;
   box-shadow: none;
 }
 
 #auth-area {
-  display: flex; /* GÜNCELLENDİ: flex yapıldı */
-  flex-direction: column; /* GÜNCELLENDİ: Elemanlar alt alta sıralanacak */
-  align-items: center; /* GÜNCELLENDİ: .why-nemty-section gibi elemanları yatayda ortalamak için */
-  /* justify-content: center; Bu artık .auth-initial-view tarafından yönetilecek */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   min-height: 100vh;
-  width: 100%; /* width: 100vw yerine %100 daha iyi olabilir, scrollbar'ı hesaba katar */
+  width: 100%;
   background-color: var(--bg-abyss);
   padding: 0;
   box-sizing: border-box;
-  overflow-y: auto; /* GÜNCELLENDİ: İçerik taşarsa dikey kaydırma çubuğu çıksın */
-  /* Footer sabit olduğu için, buradaki kaydırma footer'ı etkilemeyecektir */
+  overflow-y: auto;
 }
-.auth-initial-view { /* YENİ KURAL */
+.auth-initial-view {
   display: flex;
-  flex-direction: column; /* İçeriği (auth-container) dikeyde de ortalayabilmek için */
-  align-items: center;   /* Yatay ortalama */
-  justify-content: center; /* Dikey ortalama */
-  min-height: 100vh; /* Ekranın tamamını kaplasın */
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
   width: 100%;
-  padding: 20px; /* Kenarlardan biraz boşluk, içeriğin yapışmaması için */
+  padding: 20px;
   box-sizing: border-box;
 }
 .auth-hero-section {
   display: flex;
   flex-direction: column;
-  align-items: center;     /* DÜZELT: flex-start ise center yap! */
+  align-items: center;
   justify-content: center;
   gap: 10px;
   margin-bottom: 18px;
   width: 100%;
-  text-align: center;      /* Satırları ortala */
+  text-align: center;
 }
 .auth-logo {
   font-family: 'Orbitron', sans-serif;
@@ -153,8 +138,7 @@ body {
   line-height: 1.25;
   margin-bottom: 12px;
   text-shadow: 0 1px 3px rgba(0,123,255,.1);
-  /* YENİ EFEKT */
-  opacity: 0; /* Animasyon başlangıcında görünmez yap */
+  opacity: 0;
   animation: slideInFromLeft 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.2s forwards;
 }
 
@@ -163,9 +147,8 @@ body {
   font-size: 1.35rem;
   color: var(--text-mech-gray);
   line-height: 1.6;
-  /* YENİ EFEKT */
-  opacity: 0; /* Animasyon başlangıcında görünmez yap */
-  animation: fadeInScaleUp 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.4s forwards; /* h1'den sonra başlasın */
+  opacity: 0;
+  animation: fadeInScaleUp 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.4s forwards;
 }
 .auth-forms-section {
   flex: 1;
@@ -180,9 +163,8 @@ body {
   display:flex;
   gap:8px;
   margin-bottom:25px;
-  /* Mevcut animasyon güncelleniyor (özellikle delay) */
-  opacity:0; /* Zaten vardı, ama emin olmak için burada da belirtiyorum */
-  animation: fadeInScaleUp 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.7s forwards; /* .auth-welcome-section p'den sonra başlasın */
+  opacity:0;
+  animation: fadeInScaleUp 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.7s forwards;
 }
 .auth-tabs button {font-family:'Orbitron',sans-serif;cursor:pointer;border-radius:7px 7px 0 0;outline:none;background:transparent;border:none;border-bottom:2px solid transparent;font-size:16px;padding:10px 22px;color:var(--text-mech-gray);opacity:.7;transition:all .25s ease;}
 .auth-tabs button.active {color:var(--primary-green-base);opacity:1;border-bottom-color:var(--primary-green-base);}
@@ -200,9 +182,8 @@ body {
   padding:30px;
   border-radius:var(--border-radius-subtle);
   margin-bottom:20px;
-  /* Mevcut animasyon güncelleniyor (özellikle delay) */
-  opacity:0; /* Zaten vardı, ama emin olmak için burada da belirtiyorum */
-  animation: fadeInScaleUp 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.9s forwards; /* .auth-tabs'tan sonra başlasın */
+  opacity:0;
+  animation: fadeInScaleUp 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.9s forwards;
 }
 .auth-form input {border-radius:var(--border-radius-sharp);border:1px solid var(--border-input);color:var(--text-cyber-light);outline:none;padding:13px 16px;font-size:15px;background-color:var(--input-bg);transition:border-color .2s,box-shadow .2s;}
 .auth-form input::placeholder {color:var(--text-data-stream);}
@@ -212,12 +193,11 @@ body {
 .auth-form button[type="submit"]:active {transform:translateY(0);box-shadow:0 2px 5px rgba(0,123,255,.1);}
 .auth-message {color:var(--primary-green-dark);min-height:22px;margin-top:8px;font-size:14.5px;text-align:center;text-shadow:0 1px 1px rgba(255,255,255,.4);}
 
-/* --- MAIN APPLICATION AREA - YENİ TASARIM --- */
 .app-wrapper {
     display: flex;
     justify-content: center;
-    padding: 40px 25px; /* Alt padding kaldırıldı, footer hesaba katılacak */
-    min-height: 100vh; /* Wrapper tüm ekranı kaplasın */
+    padding: 40px 25px;
+    min-height: 100vh;
     box-sizing: border-box;
 }
 
@@ -229,14 +209,12 @@ body {
     box-shadow: var(--shadow-soft-xl); 
     display: flex;
     border: 1px solid var(--border-grid-line);
-    overflow: hidden; /* Çocuk elemanların border-radius'u kesmemesi için */
-    /* Yüksekliği viewport'tan header, footer ve app-wrapper padding'lerini çıkararak ayarla */
+    overflow: hidden;
     height: calc(100vh - var(--header-height) - var(--footer-height) - var(--app-wrapper-padding-top-bottom));
     max-height: calc(100vh - var(--header-height) - var(--footer-height) - var(--app-wrapper-padding-top-bottom));
 }
 .app-container::before, .app-container::after { display: none; }
 
-/* SOL: Chat Alanı */
 .chat-main-area {
     flex: 1; 
     min-width: 450px; 
@@ -265,8 +243,7 @@ body {
     overflow-y: auto; 
     display: flex;
     flex-direction: column;
-    gap: 15px; 
-    /* max-height veya height yok, flex ile ebeveyninden gelen alanı alacak */
+    gap: 15px;
 }
 .chat-box { scrollbar-width:thin; scrollbar-color:var(--primary-green-base) var(--bg-chat-module-inner);}
 .chat-box::-webkit-scrollbar {width:7px;}
@@ -299,7 +276,6 @@ textarea#message::placeholder {color:var(--text-data-stream);font-weight:400;fon
 .reset-button {background-color:transparent;color:var(--text-mech-gray);border:1px solid var(--border-grid-line);padding:8px 16px;border-radius:var(--border-radius-pill);font-weight:500;font-size:13px;cursor:pointer;transition:all .2s ease;align-self:flex-end;margin-top:15px;}
 .reset-button:hover {border-color:var(--text-data-stream);color:var(--text-cyber-light);background-color:var(--bg-chat-module-inner);}
 
-/* SAĞ: Bilgi Akışı Alanı */
 .sidebar-info-area {flex:.7;min-width:320px;padding:30px 25px;background-color:var(--bg-abyss);overflow-y:auto;display:flex;flex-direction:column;}
 .info-panel {display:flex;flex-direction:column;gap:25px;} 
 .info-box {background-color:var(--bg-matrix-dark);padding:22px;border-radius:var(--border-radius-sharp);box-shadow:var(--shadow-card);border:1px solid transparent;transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease;}
@@ -311,7 +287,6 @@ textarea#message::placeholder {color:var(--text-data-stream);font-weight:400;fon
 #flight-results li:last-child, #hotel-results li:last-child {border-bottom:none;}
 #flight-results li:hover, #hotel-results li:hover {background-color:rgba(0,123,255,.07);color:var(--primary-green-dark);border-radius:4px;}
 
-/* --- Header & Footer --- */
 .site-header {
     width:100%;
     background:var(--bg-glass-surface);
@@ -342,14 +317,14 @@ textarea#message::placeholder {color:var(--text-data-stream);font-weight:400;fon
 }
 
 .site-footer {
-    width:100%;background:var(--bg-glass-surface);backdrop-filter:blur(12px) saturate(180%);-webkit-backdrop-filter:blur(12px) saturate(180%);box-shadow:0 -2px 4px rgba(0,0,0,.05); /* Üst gölge */
+    width:100%;background:var(--bg-glass-surface);backdrop-filter:blur(12px) saturate(180%);-webkit-backdrop-filter:blur(12px) saturate(180%);box-shadow:0 -2px 4px rgba(0,0,0,.05);
     z-index:100;color:var(--text-mech-gray);
     border-top:1px solid var(--border-grid-line);text-align:center;font-size:.85rem;position:fixed;left:0;bottom:0;font-family:'Poppins',sans-serif;
-    height: var(--footer-height); /* Sabit yükseklik */
-    display: flex; /* İçeriği dikey ortalamak için */
-    align-items: center; /* İçeriği dikey ortalamak için */
-    justify-content: center; /* İçeriği yatay ortalamak için */
-    padding: 0 30px; /* Yatay padding */
+    height: var(--footer-height);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 30px;
 }
 
 #welcome-user {
@@ -373,7 +348,7 @@ textarea#message::placeholder {color:var(--text-data-stream);font-weight:400;fon
 }
 .toggle-password {
   position: absolute;
-  right: 12px; /* Input padding'ine göre bu değer ayarlanabilir */
+  right: 12px;
   top: 50%;
   transform: translateY(-50%);
   background: none;
@@ -384,15 +359,15 @@ textarea#message::placeholder {color:var(--text-data-stream);font-weight:400;fon
   outline: none;
   padding: 0;
   margin: 0;
-  z-index: 2; /* YENİ EKLENDİ: Butonun input ve diğer form elemanlarının üzerinde kalmasını sağlar */
+  z-index: 2;
 }
 .toggle-password:active {
-  color: #0056b3; /* Bu zaten vardı, var(--primary-green-base) de olabilirdi */
+  color: #0056b3;
 }
 
 .password-wrapper input {
   flex: 1;
-  padding-right: 40px; /* GÜNCELLENDİ: Butonun üzerine yazı gelmemesi için input'a sağdan boşluk ekleyelim */
+  padding-right: 40px;
 }
 
 .button-loading {
@@ -438,9 +413,8 @@ textarea#message::placeholder {color:var(--text-data-stream);font-weight:400;fon
 
 .why-nemty-section {
   max-width: 990px;
-  /* Önceki: margin: 60px auto 80px auto; */
-  margin: -80px auto 80px auto; /* GÜNCELLENDİ: Üst boşluk 0 yapıldı */
-  padding: 38px 18px 44px 18px; /* Kendi iç padding'i kalacak */
+  margin: -80px auto 80px auto;
+  padding: 38px 18px 44px 18px;
   background: rgba(255,255,255,0.96);
   border-radius: 22px;
   box-shadow: 0 4px 28px rgba(0,100,200,.06);
@@ -512,23 +486,23 @@ textarea#message::placeholder {color:var(--text-data-stream);font-weight:400;fon
 }
 
 #section-how-to-use {
-    padding: 25px 35px; /* Bölüm için genel padding */
-    max-width: 900px; /* İçeriğin çok genişlemesini engelle */
-    margin: 0 auto; /* Sayfada ortala */
+    padding: 25px 35px;
+    max-width: 900px;
+    margin: 0 auto;
     margin-bottom: 60px;
 }
 
-#section-how-to-use h3 { /* Adım başlıkları */
+#section-how-to-use h3 {
   font-family: 'Orbitron', sans-serif;
   color: var(--primary-green-dark);
   margin-top: 35px;
   margin-bottom: 15px;
-  font-size: 1.5rem; /* Bir önceki H3'lerden biraz daha büyük */
+  font-size: 1.5rem;
   border-bottom: 1px solid var(--border-grid-line);
   padding-bottom: 8px;
 }
 #section-how-to-use h3:first-of-type {
-    margin-top: 20px; /* İlk H3 için üst boşluk biraz daha az */
+    margin-top: 20px;
 }
 
 #section-how-to-use p {
@@ -537,34 +511,31 @@ textarea#message::placeholder {color:var(--text-data-stream);font-weight:400;fon
     color: var(--text-mech-gray);
 }
 .how-to-use-example .example-prompt {
-    /* .user sınıfından stil alacak, ancak gerekirse özelleştirebiliriz */
-    /* Örneğin, How to Use sayfasında biraz daha geniş olabilir */
-    max-width: 100%; /* Tam genişlikte gösterilebilir */
-    align-self: flex-start; /* Sola yasla, flex konteyner içinde değilse bu gereksiz */
+    max-width: 100%;
+    align-self: flex-start;
     margin: 10px 0;
-    padding: 15px 20px; /* Padding'i biraz artıralım */
-    font-size: 15px; /* Font boyutunu standartlaştıralım */
+    padding: 15px 20px;
+    font-size: 15px;
 }
 
 .how-to-use-example .example-response {
-    /* .ai sınıfından stil alacak */
     max-width: 100%;
     margin: 10px 0 20px 0;
-    padding: 18px 22px; /* Padding'i biraz artıralım */
+    padding: 18px 22px;
     font-size: 14.5px;
 }
-.how-to-use-example .example-response h4 { /* Itinerary içindeki gün başlıkları */
-    font-family: 'Poppins', sans-serif; /* Orbitron yerine Poppins */
+.how-to-use-example .example-response h4 {
+    font-family: 'Poppins', sans-serif;
     font-weight: 600;
-    color: var(--primary-green-dark); /* Ana tema rengi */
+    color: var(--primary-green-dark);
     margin-top: 12px;
     margin-bottom: 8px;
-    font-size: 1.05em; /* AI mesaj içindeki h3'ten biraz daha küçük olabilir */
+    font-size: 1.05em;
 }
 .how-to-use-example .example-response ul {
     margin-top: 5px;
     margin-bottom: 12px;
-    padding-left: 20px; /* Madde işaretleri için iç boşluk */
+    padding-left: 20px;
 }
 .how-to-use-example .example-response li {
     margin-bottom: 6px;
@@ -573,15 +544,14 @@ textarea#message::placeholder {color:var(--text-data-stream);font-weight:400;fon
 
 .example-results-container {
     display: flex;
-    gap: 25px; /* İki info-box arası boşluk */
+    gap: 25px;
     margin-top: 15px;
-    flex-wrap: wrap; /* Küçük ekranlarda alt alta gelsinler */
+    flex-wrap: wrap;
 }
 
 .example-results-container .info-box {
-    flex: 1; /* Eşit genişlikte yayılsınlar */
-    min-width: 300px; /* Minimum genişlik, dar ekranlarda taşmayı önler */
-    /* .info-box'ın mevcut stilleri (arka plan, gölge, border-radius vb.) kullanılacak */
+    flex: 1;
+    min-width: 300px;
 }
 .example-results-container .info-box ul {
     list-style-type: none;
@@ -590,42 +560,37 @@ textarea#message::placeholder {color:var(--text-data-stream);font-weight:400;fon
 .example-results-container .info-box li {
     padding: 9px 5px;
     border-bottom: 1px dashed #e0e0e0;
-    font-size: 0.95em; /* Biraz daha büyük olabilir örnek için */
+    font-size: 0.95em;
 }
 .example-results-container .info-box li:last-child {
     border-bottom: none;
 }
 
-/* style.css */
-
-/* ... (Mevcut stilleriniz) ... */
-
 #section-dream-trip {
     padding: 30px 40px;
-    max-width: 850px; /* How to Use'dan biraz daha dar olabilir veya aynı */
-    margin: 0 auto 80px auto; /* Alt boşluk */
-    text-align: center; /* Başlık ve paragrafları ortala */
+    max-width: 850px;
+    margin: 0 auto 80px auto;
+    text-align: center;
 }
 
 #section-dream-trip h2 {
-    margin-bottom: 15px; /* Başlık ve altındaki p arası */
-    font-size: 2rem; /* Biraz daha büyük ve dikkat çekici */
+    margin-bottom: 15px;
+    font-size: 2rem;
 }
 
-#section-dream-trip > p { /* h2 altındaki ana açıklama paragrafı */
-    max-width: 700px; /* Paragrafın çok genişlemesini engelle */
+#section-dream-trip > p {
+    max-width: 700px;
     margin-left: auto;
     margin-right: auto;
 }
 
-/* Dream Trip Formuna Özel Stiller */
 .dream-trip-custom-form {
-    background-color: transparent; /* Arka planı temiz tut */
+    background-color: transparent;
     box-shadow: none;
     border: none;
-    padding: 25px 0; /* Formun iç boşluğu */
-    margin-top: 30px; /* Üstteki paragraftan sonra boşluk */
-    text-align: left; /* Form elemanlarını sola yasla */
+    padding: 25px 0;
+    margin-top: 30px;
+    text-align: left;
 }
 
 .dream-label {
@@ -640,39 +605,37 @@ textarea#message::placeholder {color:var(--text-data-stream);font-weight:400;fon
 .dream-textarea {
   width: 100%;
   padding: 15px 18px;
-  border-radius: var(--border-radius-subtle); /* Daha yuvarlak kenarlar */
+  border-radius: var(--border-radius-subtle);
   border: 1px solid var(--border-input);
   font-family: 'Poppins', sans-serif;
-  font-size: 16px; /* Biraz daha büyük font */
+  font-size: 16px;
   line-height: 1.65;
   background-color: var(--bg-input-field);
   color: var(--text-cyber-light);
   transition: border-color .2s, box-shadow .2s, transform 0.2s;
   resize: vertical;
-  min-height: 120px; /* Minimum yükseklik */
+  min-height: 120px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.03);
 }
 
 .dream-textarea:focus {
   border-color: var(--primary-green-base);
   box-shadow: 0 0 0 3.5px var(--border-accent-subtle), 0 4px 10px rgba(0,123,255,.07);
-  transform: translateY(-2px); /* Hafif yukarı kalkma efekti */
+  transform: translateY(-2px);
 }
 
 .dream-form-actions {
     margin-top: 25px;
-    text-align: center; /* Butonu ortalamak için */
+    text-align: center;
 }
 
 .dream-submit-btn {
-  /* Mevcut .auth-form button[type="submit"] stilini devralabilir,
-     ancak burada özelleştirebiliriz veya yeni bir stil tanımlayabiliriz */
   background: linear-gradient(145deg, var(--primary-green-base), var(--primary-green-glow));
   color: var(--text-on-primary-accent);
-  border-radius: var(--border-radius-pill); /* Tamamen yuvarlak */
+  border-radius: var(--border-radius-pill);
   border: none;
   cursor: pointer;
-  padding: 14px 35px; /* Biraz daha büyük padding */
+  padding: 14px 35px;
   font-weight: 600;
   font-size: 1.05em;
   letter-spacing: .5px;
@@ -693,33 +656,26 @@ textarea#message::placeholder {color:var(--text-data-stream);font-weight:400;fon
   box-shadow: 0 4px 8px rgba(0,123,255,.15);
 }
 
-/* Mesaj kutusu (#dream-trip-message) için mevcut .auth-message stilleri genellikle yeterli olur,
-   ama gerekirse burada da özelleştirilebilir. HTML'de font-size'ını biraz artırmıştık. */
 #dream-trip-message {
     border-radius: var(--border-radius-sharp);
     padding: 12px 15px;
-    /* background-color: #eef2f7; Arka planı farklılaştırmak isterseniz */
 }
-
-
 
 @keyframes spin {
   to { transform: rotate(360deg); }
 }
 
-
-/* MEDIA QUERIES */
 @media (max-width:1024px) {
     :root {
         --header-height: 60px;
         --footer-height: 48px;
-        --app-wrapper-padding-top-bottom: 60px; /* 30px + 30px */
+        --app-wrapper-padding-top-bottom: 60px;
     }
     .app-wrapper {padding:30px 15px;}
-    .app-container {flex-direction:column;padding:0; height: auto; min-height: calc(100vh - var(--header-height) - var(--footer-height) - var(--app-wrapper-padding-top-bottom));} /* Mobil için yükseklik auto, min-height kalır */
+    .app-container {flex-direction:column;padding:0; height: auto; min-height: calc(100vh - var(--header-height) - var(--footer-height) - var(--app-wrapper-padding-top-bottom));}
     .chat-main-area {border-right:none;border-bottom:1px solid var(--border-grid-line);min-width:unset;padding:25px}
     .sidebar-info-area {min-width:unset;padding:25px;background-color:var(--bg-matrix-dark)}
-    .chat-box {max-height:350px} /* Mobil için chat-box'a max-height verilebilir */
+    .chat-box {max-height:350px}
     .auth-container {flex-direction:column;text-align:center;gap:30px;padding:30px 15px}
     .auth-welcome-section {padding-right:0;margin-bottom:25px}
     .auth-welcome-section h1 {font-size:2.5rem}
@@ -729,7 +685,7 @@ textarea#message::placeholder {color:var(--text-data-stream);font-weight:400;fon
     :root {
         --header-height: 56px;
         --footer-height: 45px;
-        --app-wrapper-padding-top-bottom: 40px; /* 20px + 20px */
+        --app-wrapper-padding-top-bottom: 40px;
     }
     .app-wrapper {padding:20px 15px;}
     #welcome-user {display:none}

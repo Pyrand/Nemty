@@ -46,7 +46,6 @@ class AmadeusAuth:
             print(f"[DEBUG] Amadeus token exception: {e}")
             return None
 
-# Global auth instance
 amadeus_auth = AmadeusAuth()
 
 def translate_city_name(city_name):
@@ -104,7 +103,7 @@ def search_hotels_by_geocode(latitude, longitude):
         params = {
             "latitude": latitude,
             "longitude": longitude,
-            "radius": 20,  # 20 km radius
+            "radius": 20,
             "radiusUnit": "KM"
         }
         print(f"[DEBUG] Amadeus hotel search in progress: {latitude}, {longitude}")
@@ -113,7 +112,7 @@ def search_hotels_by_geocode(latitude, longitude):
             data = response.json()
             hotels = data.get("data", [])
             hotel_ids = []
-            for hotel in hotels[:3]:  
+            for hotel in hotels[:3]:
                 hotel_id = hotel.get("hotelId")
                 if hotel_id:
                     hotel_ids.append(hotel_id)
@@ -189,7 +188,6 @@ def get_hotel_offers(hotel_ids, adults=1, children=0):
 
     return all_offers[:3] if all_offers else []
 
-
 def extract_guests_from_message(user_message):
     try:
         from openai import OpenAI
@@ -231,13 +229,10 @@ def get_hotels_by_city(city_name, adults=1, children=0):
     if hotel_offers:
         return hotel_offers
     else:
-        # Hem orijinal ismi hem çeviriyi dene
         mock_hotels = get_mock_hotels_by_city(city_name)
         if not mock_hotels and city_name_eng.lower() != city_name.lower():
             mock_hotels = get_mock_hotels_by_city(city_name_eng)
         return mock_hotels
-
-
 
 def get_mock_hotels_by_city(city_name):
     variations = [
@@ -245,7 +240,6 @@ def get_mock_hotels_by_city(city_name):
         city_name.strip().title(),
         city_name.strip().capitalize()
     ]
-    # Ekstra olarak OpenAI çevirisini de ekle
     try:
         from .hotels import translate_city_name
         eng = translate_city_name(city_name)

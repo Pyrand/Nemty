@@ -10,9 +10,8 @@
 </head>
 <body>
 
-<!-- Auth Area -->
 <div id="auth-area">
-  <div class="auth-initial-view"> <!-- YENİ DIV BAŞLANGICI -->
+  <div class="auth-initial-view">
     <div class="auth-container">
       <div class="auth-welcome-section">
         <h1>Welcome to Nemty</h1>
@@ -45,13 +44,12 @@
         </form>
       </div>
     </div>
-  </div> <!-- YENİ DIV SONU -->
+  </div>
 
-  <!-- ALTTA NEDEN NEMTY KUTULARI -->
   <div class="why-nemty-section">
     <h2>Why Nemty?</h2>
     <div class="why-nemty-grid">
-       <div class="feature-card">
+      <div class="feature-card">
         <div class="feature-icon">🧭</div>
         <div class="feature-title">Personalized Itineraries</div>
         <div class="feature-desc">Nemty offers trip plans tailored just for you, based on your interests, budget, and style.</div>
@@ -85,181 +83,159 @@
   </footer>
 </div>
 
-
-
-  <!-- Main App Area with SPA Sections -->
-  <div id="main-app-area" style="display:none;">
-      <header class="site-header">
-      <div class="header-left">
-        <div class="logo">
-          Nemty
-          <span class="logo-dot"></span>
-        </div>
-        <span id="welcome-user"></span>
+<div id="main-app-area" style="display:none;">
+  <header class="site-header">
+    <div class="header-left">
+      <div class="logo">
+        Nemty
+        <span class="logo-dot"></span>
       </div>
-      <div class="header-right">
-        <nav class="site-nav">
-          <button class="nav-link active" onclick="showSection('home', this)">Home</button>
-          <!-- GÜNCELLENDİ -->
-          <button class="nav-link" onclick="showSection('how-to-use', this)">How to Use</button>
-          <button class="nav-link" onclick="showSection('dream-trip', this)">Dream Trip</button>
-          <!-- GÜNCELLENDİ -->
-        </nav>
-        <button id="logout-btn">Logout</button>
-      </div>
-    </header>
+      <span id="welcome-user"></span>
+    </div>
+    <div class="header-right">
+      <nav class="site-nav">
+        <button class="nav-link active" onclick="showSection('home', this)">Home</button>
+        <button class="nav-link" onclick="showSection('how-to-use', this)">How to Use</button>
+        <button class="nav-link" onclick="showSection('dream-trip', this)">Dream Trip</button>
+      </nav>
+      <button id="logout-btn">Logout</button>
+    </div>
+  </header>
 
-    <!-- SPA Content Sections -->
-    <div id="section-home" class="section-content">
-      <div class="app-wrapper">
-        <div class="app-container">
-          <!-- LEFT: Chat Area -->
-          <div class="chat-main-area">
-            <div class="chat-module">
-              <div class="chat-box"></div>
-              <form onsubmit="sendMessage(event)">
-                <textarea id="message" placeholder="Type your message..." autocomplete="off" rows="1"></textarea>
-                <button type="submit">Send</button>
-              </form>
-              <button class="reset-button" onclick="resetChat()">Reset</button>
-            </div>
+  <div id="section-home" class="section-content">
+    <div class="app-wrapper">
+      <div class="app-container">
+        <div class="chat-main-area">
+          <div class="chat-module">
+            <div class="chat-box"></div>
+            <form onsubmit="sendMessage(event)">
+              <textarea id="message" placeholder="Type your message..." autocomplete="off" rows="1"></textarea>
+              <button type="submit">Send</button>
+            </form>
+            <button class="reset-button" onclick="resetChat()">Reset</button>
           </div>
-          <!-- RIGHT: Sidebar -->
-          <div class="sidebar-info-area">
-            <div class="info-panel">
-              <div class="info-box">
-                <strong>Flight Results</strong>
-                <div id="flight-results"></div>
-              </div>
-              <div class="info-box">
-                <strong>Hotel Results</strong>
-                <div id="hotel-results"></div>
-              </div>
+        </div>
+        <div class="sidebar-info-area">
+          <div class="info-panel">
+            <div class="info-box">
+              <strong>Flight Results</strong>
+              <div id="flight-results"></div>
+            </div>
+            <div class="info-box">
+              <strong>Hotel Results</strong>
+              <div id="hotel-results"></div>
             </div>
           </div>
         </div>
       </div>
     </div>
+  </div>
 
-    <!-- ESKİ BLOG BÖLÜMÜ YENİ "HOW TO USE" OLDU -->
-    <!-- ESKİ BLOG BÖLÜMÜ YENİ "HOW TO USE" OLDU -->
-<div id="section-how-to-use" class="section-content" style="display:none;">
-  <h2 style="font-family: 'Orbitron', sans-serif;">How to Use Nemty Effectively</h2>
-  <p>See how Nemty transforms your travel ideas into actionable plans. Provide clear details for the best results!</p>
+  <div id="section-how-to-use" class="section-content" style="display:none;">
+    <h2 style="font-family: 'Orbitron', sans-serif;">How to Use Nemty Effectively</h2>
+    <p>See how Nemty transforms your travel ideas into actionable plans. Provide clear details for the best results!</p>
 
-  <div class="how-to-use-example">
-    <h3>1. Crafting Your Prompt</h3>
-    <p>Imagine you want a short trip. Here’s an example of a good, detailed prompt:</p>
-    
-    <div class="example-prompt user"> <!-- Kullanıcı mesajı stili için .user sınıfı -->
+    <div class="how-to-use-example">
+      <h3>1. Crafting Your Prompt</h3>
+      <p>Imagine you want a short trip. Here’s an example of a good, detailed prompt:</p>
+      <div class="example-prompt user">
         I want to take a 3-day trip from Istanbul to London. I will go alone. Make a plan.
-    </div>
-    
-    <!-- #section-how-to-use içindeki ilgili kısım -->
-    <p class="pro-tip">
-      <strong>Pro Tip:</strong> Be specific! Including details like your origin, destination, duration, number of travelers, interests (e.g., "history buff", "foodie", "nature lover"), and budget helps Nemty create a more personalized plan.
-      <br><br> <!-- Bir satır boşluk ekleyelim -->
-      ✨ <strong>Nemty understands multiple languages!</strong> Feel free to write your travel requests in the language you're most comfortable with. For example, you can say: 
-      <br><em>"İstanbul'dan Londra'ya 3 günlük bir gezi planla."</em> or <em>"Planea un viaje de 3 días a Londres desde Estambul."</em>
-    </p>
-
-    <h3>2. Nemty's Itinerary Response</h3>
-    <p>Based on your prompt, Nemty can generate a day-by-day itinerary like this:</p>
-    
-    <div class="example-response ai"> <!-- AI mesajı stili için .ai sınıfı -->
+      </div>
+      <p class="pro-tip">
+        <strong>Pro Tip:</strong> Be specific! Including details like your origin, destination, duration, number of travelers, interests (e.g., "history buff", "foodie", "nature lover"), and budget helps Nemty create a more personalized plan.
+        <br><br>
+        ✨ <strong>Nemty understands multiple languages!</strong> Feel free to write your travel requests in the language you're most comfortable with. For example, you can say:
+        <br><em>"İstanbul'dan Londra'ya 3 günlük bir gezi planla."</em> or <em>"Planea un viaje de 3 días a Londres desde Estambul."</em>
+      </p>
+      <h3>2. Nemty's Itinerary Response</h3>
+      <p>Based on your prompt, Nemty can generate a day-by-day itinerary like this:</p>
+      <div class="example-response ai">
         <span style="font-weight: 500; font-size: .96em;">🤖 Nemty</span><br>
         Here's a suggested 3-day itinerary for your solo trip from Istanbul to London:
 
         <h4>Day 1: Arrival and Exploration</h4>
         <ul>
-            <li>Start your day by exploring Trafalgar Square, a major landmark in central London.</li>
-            <li>Visit Nelson's Column and admire the bronze lions around its base. It’s a perfect spot for taking some photos.</li>
-            <li>Explore the nearby Trafalgar Theatre, known for its Art Deco style and theatrical performances.</li>
+          <li>Start your day by exploring Trafalgar Square, a major landmark in central London.</li>
+          <li>Visit Nelson's Column and admire the bronze lions around its base. It’s a perfect spot for taking some photos.</li>
+          <li>Explore the nearby Trafalgar Theatre, known for its Art Deco style and theatrical performances.</li>
         </ul>
 
         <h4>Day 2: Historical Landmarks</h4>
         <ul>
-            <li>Visit the equestrian statue of Charles I at Charing Cross, considered the central point of London.</li>
-            <li>Walk through Whitehall and explore the Banqueting House, where Charles I was executed.</li>
-            <li>End your day with a visit to the bronze statue of Admiral Lord Nelson in the area.</li>
+          <li>Visit the equestrian statue of Charles I at Charing Cross, considered the central point of London.</li>
+          <li>Walk through Whitehall and explore the Banqueting House, where Charles I was executed.</li>
+          <li>End your day with a visit to the bronze statue of Admiral Lord Nelson in the area.</li>
         </ul>
 
         <h4>Day 3: Leisure and Reflection</h4>
         <ul>
-            <li>Visit the Statue of Henry Havelock in Trafalgar Square. Learn about his role in the Anglo-Burmese and Anglo-Afghan wars.</li>
-            <li>Spend the afternoon visiting museums or shopping in nearby areas to take some London memorabilia.</li>
-            <li>End your trip with a relaxing stroll around the square, people-watching and enjoying the vibrant atmosphere.</li>
+          <li>Visit the Statue of Henry Havelock in Trafalgar Square. Learn about his role in the Anglo-Burmese and Anglo-Afghan wars.</li>
+          <li>Spend the afternoon visiting museums or shopping in nearby areas to take some London memorabilia.</li>
+          <li>End your trip with a relaxing stroll around the square, people-watching and enjoying the vibrant atmosphere.</li>
         </ul>
         Enjoy your trip planning, and safe travels!
-    </div>
-
-    <h3>3. Flight & Hotel Results</h3>
-    <p>Alongside the itinerary, Nemty will search for relevant flights and hotels, displayed in the side panels:</p>
-
-    <div class="example-results-container">
-        <div class="info-box example-flights"> <!-- Mevcut .info-box stilini kullanabiliriz -->
-            <strong>Flight Results</strong>
-            <div id="example-flight-results">
-                <ul>
-                    <li>Pegasus PC 1177 – Departure: 2025-06-05 15:40+03:00</li>
-                    <li>British BA 603 – Departure: 2025-06-05 16:10+03:00</li>
-                    <li>AJet VF 1991 – Departure: 2025-06-05 19:40+03:00</li>
-                    <li>Pegasus PC 1173 – Departure: 2025-06-05 21:10+03:00</li>
-                    <li>Turkish TK 1983 – Departure: 2025-06-05 18:45+03:00</li>
-                </ul>
-            </div>
+      </div>
+      <h3>3. Flight & Hotel Results</h3>
+      <p>Alongside the itinerary, Nemty will search for relevant flights and hotels, displayed in the side panels:</p>
+      <div class="example-results-container">
+        <div class="info-box example-flights">
+          <strong>Flight Results</strong>
+          <div id="example-flight-results">
+            <ul>
+              <li>Pegasus PC 1177 – Departure: 2025-06-05 15:40+03:00</li>
+              <li>British BA 603 – Departure: 2025-06-05 16:10+03:00</li>
+              <li>AJet VF 1991 – Departure: 2025-06-05 19:40+03:00</li>
+              <li>Pegasus PC 1173 – Departure: 2025-06-05 21:10+03:00</li>
+              <li>Turkish TK 1983 – Departure: 2025-06-05 18:45+03:00</li>
+            </ul>
+          </div>
         </div>
-
-        <div class="info-box example-hotels"> <!-- Mevcut .info-box stilini kullanabiliriz -->
-            <strong>Hotel Results</strong>
-            <div id="example-hotel-results">
-                <ul>
-                    <li>London Central Hotel – London, TR – 100 EUR (⭐ 8.3/10)</li>
-                    <li>London Palace Suites – London, TR – 120 EUR (⭐ 8.7/10)</li>
-                    <li>Grand London Inn – London, TR – 90 EUR (⭐ 8.1/10)</li>
-                </ul>
-            </div>
+        <div class="info-box example-hotels">
+          <strong>Hotel Results</strong>
+          <div id="example-hotel-results">
+            <ul>
+              <li>London Central Hotel – London, TR – 100 EUR (⭐ 8.3/10)</li>
+              <li>London Palace Suites – London, TR – 120 EUR (⭐ 8.7/10)</li>
+              <li>Grand London Inn – London, TR – 90 EUR (⭐ 8.1/10)</li>
+            </ul>
+          </div>
         </div>
+      </div>
+      <p style="margin-top: 20px;">Remember, you can always ask Nemty for more options, to refine the search, or to book something specific!</p>
     </div>
-    <p style="margin-top: 20px;">Remember, you can always ask Nemty for more options, to refine the search, or to book something specific!</p>
   </div>
-  
-</div>
 
-<!-- ESKİ ABOUT BÖLÜMÜ YENİ "DREAM TRIP" OLDU -->
-<div id="section-dream-trip" class="section-content" style="display:none;">
-  <h2 style="font-family: 'Orbitron', sans-serif;">Share Your Dream Getaway 🏝️</h2>
-  <p style="font-size: 1.1em; color: var(--text-mech-gray); margin-bottom: 25px;">
-    Forget structured prompts for a moment! What does your absolute ideal vacation look like? 
-    <br>
-    Describe it to us in your own words – the more imaginative, the better. We're collecting these dreams to inspire future Nemty features (and maybe even make some come true!).
-  </p>
-  
-  <form id="dream-trip-form" class="dream-trip-custom-form"> <!-- CSS için özel sınıf -->
-    <label for="dream-description" class="dream-label">
-      Let your imagination run wild:
-    </label>
-    <textarea id="dream-description" 
-              class="dream-textarea"
-              placeholder="e.g., A week-long silent retreat in a minimalist cabin nestled in the Japanese Alps, with daily meditation sessions and onsen visits... or perhaps a vibrant culinary tour through the street food markets of Southeast Asia, learning local recipes along the way!" 
-              rows="8" 
-              required></textarea>
-    
-    <div class="dream-form-actions">
+  <div id="section-dream-trip" class="section-content" style="display:none;">
+    <h2 style="font-family: 'Orbitron', sans-serif;">Share Your Dream Getaway 🏝️</h2>
+    <p style="font-size: 1.1em; color: var(--text-mech-gray); margin-bottom: 25px;">
+      Forget structured prompts for a moment! What does your absolute ideal vacation look like?
+      <br>
+      Describe it to us in your own words – the more imaginative, the better. We're collecting these dreams to inspire future Nemty features (and maybe even make some come true!).
+    </p>
+    <form id="dream-trip-form" class="dream-trip-custom-form">
+      <label for="dream-description" class="dream-label">
+        Let your imagination run wild:
+      </label>
+      <textarea id="dream-description"
+                class="dream-textarea"
+                placeholder="e.g., A week-long silent retreat in a minimalist cabin nestled in the Japanese Alps, with daily meditation sessions and onsen visits... or perhaps a vibrant culinary tour through the street food markets of Southeast Asia, learning local recipes along the way!"
+                rows="8"
+                required></textarea>
+      <div class="dream-form-actions">
         <button type="submit" class="dream-submit-btn">Send My Dream to Nemty ✨</button>
-    </div>
-    <div class="auth-message" id="dream-trip-message" style="text-align: left; margin-top:20px; font-size: 1.05em;"></div>
-  </form>
+      </div>
+      <div class="auth-message" id="dream-trip-message" style="text-align: left; margin-top:20px; font-size: 1.05em;"></div>
+    </form>
+  </div>
 </div>
 
 <footer class="site-footer">
-    <div>
-      <span>© 2025 Nemty. All rights reserved.</span>
-      <span class="footer-sep">|</span>
-      <span>Made with <span style="color: var(--primary-green-glow);">♥</span> by Kerem Bürkük</span>
-    </div>
-  </footer>
+  <div>
+    <span>© 2025 Nemty. All rights reserved.</span>
+    <span class="footer-sep">|</span>
+    <span>Made with <span style="color: var(--primary-green-glow);">♥</span> by Kerem Bürkük</span>
+  </div>
+</footer>
 
-  
 </body>
 </html>

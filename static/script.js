@@ -1,8 +1,6 @@
 document.addEventListener("DOMContentLoaded", function() {
-    // SPA initial state: hide main app if not logged in
     checkLogin();
 
-    // Tab switching
     document.getElementById("login-tab").onclick = function() {
         this.classList.add("active");
         document.getElementById("register-tab").classList.remove("active");
@@ -16,7 +14,6 @@ document.addEventListener("DOMContentLoaded", function() {
         document.getElementById("register-form").style.display = "";
     };
 
-    // Login form
     document.getElementById("login-form").onsubmit = async function(e) {
         e.preventDefault();
         const username = document.getElementById("login-username").value;
@@ -53,7 +50,6 @@ document.addEventListener("DOMContentLoaded", function() {
             submitBtn.classList.remove('button-loading');
         }
 
-        // Textarea auto-height setup
         const messageTextarea = document.getElementById('message');
         if (messageTextarea) {
             const initialMinHeight = getComputedStyle(messageTextarea).minHeight;
@@ -69,7 +65,6 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     };
 
-    // Register form
     document.getElementById("register-form").onsubmit = async function(e) {
         e.preventDefault();
         const username = document.getElementById("register-username").value.trim();
@@ -79,7 +74,6 @@ document.addEventListener("DOMContentLoaded", function() {
         const msgBox = document.getElementById("register-message");
         const submitBtn = this.querySelector('button[type="submit"]');
 
-        // Validation
         if (username.length < 3) {
             msgBox.textContent = "Username must be at least 3 characters!";
             return;
@@ -123,7 +117,6 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     };
 
-    // Logout button (in header)
     const logoutBtn = document.getElementById("logout-btn");
     if (logoutBtn) {
         logoutBtn.onclick = async function() {
@@ -133,9 +126,6 @@ document.addEventListener("DOMContentLoaded", function() {
             document.querySelector(".chat-box").innerHTML = "";
         };
     }
-
-    
-
 });
 
 function showApp() {
@@ -149,7 +139,6 @@ function showApp() {
             if (data.logged_in && data.user) {
                 welcomeDiv.textContent = `Welcome, ${data.user}!`;
 
-                // 🟢 LOAD USER CHAT HISTORY ON LOGIN
                 fetch("/api/history")
                     .then(res => res.json())
                     .then(data => {
@@ -168,7 +157,6 @@ function showApp() {
                             });
                         }
 
-                        // YENİ: Flight ve Hotel sonuçlarını doldur
                         if (data.flights && data.flights.length > 0) {
                             showFlights(data.flights);
                         }
@@ -201,7 +189,6 @@ function showHotelsStatic(hotels) {
     box.appendChild(ul);
 }
 
-
 function checkLogin() {
     fetch("/api/check-login")
         .then(res => res.json())
@@ -221,10 +208,8 @@ async function sendMessage(event) {
     const message = input.value.trim();
     if (message === "") return;
 
-    // Find the submit button
     const submitBtn = event.target.querySelector('button[type="submit"]');
 
-    // Disable button and textarea, start loading
     if (submitBtn) {
         submitBtn.disabled = true;
         submitBtn.classList.add('button-loading');
@@ -277,21 +262,15 @@ async function sendMessage(event) {
     }
 }
 
-// Helper: extract city name from user message or AI response
 function extractCityFromMessage(userMessage, aiResponse) {
-    // Try to find city name in user message first
     const cityPatterns = [
-        // Turkish patterns
         /(\w+)(?:'?(?:ye|ya|de|da|den|dan|e|a)\s|'?(?:ye|ya|de|da|den|dan|e|a)$)/gi,
-        // English patterns
         /(?:to|in|from|visit)\s+(\w+)/gi,
-        // Words starting with capital letter (city names)
         /\b([A-Z][a-z]+(?:\s+[A-Z][a-z]+)*)\b/g
     ];
 
     let cities = [];
 
-    // Extract city names from user message
     cityPatterns.forEach(pattern => {
         const matches = userMessage.match(pattern);
         if (matches) {
@@ -304,13 +283,11 @@ function extractCityFromMessage(userMessage, aiResponse) {
         }
     });
 
-    // Extract city names from AI response
     const aiCityMatches = aiResponse.match(/\b([A-Z][a-z]+(?:\s+[A-Z][a-z]+)*)\b/g);
     if (aiCityMatches) {
         cities.push(...aiCityMatches.filter(city => city.length > 2));
     }
 
-    // Return most common city
     if (cities.length > 0) {
         const cityCount = {};
         cities.forEach(city => {
@@ -345,7 +322,6 @@ function addMessageToChat(role, content) {
         label = "";
     }
 
-    // No label for user, "🤖 Nemty" at the top for bot
     msg.innerHTML = `${label}${marked.parse(content).replace(/^<p>|<\/p>$/g, '')}`;
 
     chatBox.appendChild(msg);
@@ -355,7 +331,6 @@ function addMessageToChat(role, content) {
 async function resetChat() {
     await fetch("/reset");
     document.querySelector(".chat-box").innerHTML = "";
-    // Also clear flight and hotel results
     document.getElementById("flight-results").innerHTML = "";
     const hotelResults = document.getElementById("hotel-results");
     if (hotelResults) hotelResults.innerHTML = "";
@@ -418,7 +393,6 @@ async function showHotels(city) {
     }
 }
 
-// Password show/hide toggle
 document.querySelectorAll(".toggle-password").forEach(function(btn) {
     btn.addEventListener("click", function() {
         const input = this.parentElement.querySelector("input");
@@ -448,18 +422,16 @@ function addInfoMessage(type) {
     return msg;
 }
 
-
 function showSection(section, btn) {
-      document.querySelectorAll('.section-content').forEach(div => div.style.display = 'none');
-      document.getElementById('section-' + section).style.display = '';
+    document.querySelectorAll('.section-content').forEach(div => div.style.display = 'none');
+    document.getElementById('section-' + section).style.display = '';
 
-      // Navigation'da aktif buton vurgusu
-      if (btn) {
+    if (btn) {
         document.querySelectorAll('.nav-link').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
-      }
     }
-    // Otomatik olarak Home'u aç (JS yüklenince)
-    document.addEventListener("DOMContentLoaded", function() {
-      showSection('home', document.querySelector('.nav-link'));
-    });
+}
+
+document.addEventListener("DOMContentLoaded", function() {
+    showSection('home', document.querySelector('.nav-link'));
+});
