@@ -1,5 +1,7 @@
+
 document.addEventListener("DOMContentLoaded", function() {
     checkLogin();
+    showSection('home', document.querySelector('.nav-link'));
 
     document.getElementById("login-tab").onclick = function() {
         this.classList.add("active");
@@ -174,6 +176,16 @@ function showApp() {
         });
 }
 
+function showSection(section, btn) {
+    document.querySelectorAll('.section-content').forEach(div => div.style.display = 'none');
+    document.getElementById('section-' + section).style.display = '';
+
+    if (btn) {
+        document.querySelectorAll('.nav-link').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+    }
+}
+
 function showHotelsStatic(hotels) {
     const box = document.getElementById("hotel-results");
     if (!box) return;
@@ -252,7 +264,7 @@ async function sendMessage(event) {
             showFlights(data.flights);
             let cityName = extractCityFromMessage(message, data.response);
             if (cityName) {
-                await showHotels(cityName);
+                await showHotels(cityName,message);
             }
         }
     } catch (error) {
@@ -361,14 +373,14 @@ async function showFlights(flights) {
     flightBox.appendChild(ul);
 }
 
-async function showHotels(city) {
+async function showHotels(city, userMessage) {
     const hotelInfoMsg = addInfoMessage("hotel");
 
     try {
         const res = await fetch("/hotels", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ city: city, message: message })
+            body: JSON.stringify({ city: city, message: userMessage })
         });
 
         const data = await res.json();
@@ -426,16 +438,9 @@ function addInfoMessage(type) {
     return msg;
 }
 
-function showSection(section, btn) {
-    document.querySelectorAll('.section-content').forEach(div => div.style.display = 'none');
-    document.getElementById('section-' + section).style.display = '';
 
-    if (btn) {
-        document.querySelectorAll('.nav-link').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-    }
-}
-
+/*
 document.addEventListener("DOMContentLoaded", function() {
     showSection('home', document.querySelector('.nav-link'));
 });
+*/

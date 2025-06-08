@@ -720,3 +720,13 @@ textarea#message::placeholder {color:var(--text-data-stream);font-weight:400;fon
     #logout-btn {padding:6px 15px;font-size:.8rem;}
     .site-footer {font-size:.8rem;}
 }
+@media (max-width:480px) {
+    .auth-container {padding:20px 10px;}
+    .auth-logo {font-size:2rem}
+    .site-header, .site-footer {padding:0 15px;}
+    .site-nav {flex-wrap:wrap;gap:6px;justify-content:center;}
+    .nav-link {font-size:0.9rem;padding:6px 10px;}
+    .feature-card {flex:1 1 100%;max-width:none;}
+    .chat-box {max-height:260px;padding:12px;}
+    textarea#message {font-size:13.5px}
+}
