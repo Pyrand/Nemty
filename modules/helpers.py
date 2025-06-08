@@ -1,4 +1,3 @@
-import re
 import sqlite3
 
 def print_error(e):
@@ -22,8 +21,6 @@ def load_user_history(username, for_model=True):
 def save_message(username, role, content, name=None):
     conn = sqlite3.connect("users.db")
     cursor = conn.cursor()
-    if name:
-        content = f"[{name}] {content}"
     cursor.execute("INSERT INTO user_messages (username, role, content) VALUES (?, ?, ?)", (username, role, content))
     conn.commit()
     conn.close()

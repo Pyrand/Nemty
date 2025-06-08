@@ -72,6 +72,7 @@ def get_flights_by_cities(from_city, to_city):
             part = response.json().get("departures", [])
             flights.extend(part)
 
+    
     for f in flights:
         try:
             flight_number = f.get("number", "N/A")
@@ -82,6 +83,7 @@ def get_flights_by_cities(from_city, to_city):
             print(f"[Flight log error] {e}")
 
     filtered = []
+    
     for f in flights:
         arrival_icao = f.get("arrival", {}).get("airport", {}).get("icao", "").lower()
         arrival_city = f.get("arrival", {}).get("airport", {}).get("municipalityName", "").lower()
@@ -105,6 +107,6 @@ def get_flights_by_cities(from_city, to_city):
             "Departure time not found"
         )
 
-        results.append(f"{airline} {flight_number} - \n Departure: {departure_time}")
+        results.append(f"{airline} {flight_number} - Departure: {departure_time}")
 
     return results or [f"No flights found for {from_city.title()} → {to_city.title()}."]

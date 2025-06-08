@@ -108,6 +108,10 @@ document.addEventListener("DOMContentLoaded", function() {
                 document.getElementById("register-email").value = "";
                 document.getElementById("register-phone").value = "";
                 document.getElementById("register-password").value = "";
+                document.getElementById("login-tab").classList.add("active");
+                document.getElementById("register-tab").classList.remove("active");
+                document.getElementById("register-form").style.display = "none";
+                document.getElementById("login-form").style.display = "";
             }
         } catch (error) {
             msgBox.textContent = "Could not connect to the server! Please try again.";

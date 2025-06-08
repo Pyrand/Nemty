@@ -43,15 +43,15 @@ def fetch_from_opentripmap(city_preference, category_preference):
 
 def get_recommended_places(city_preference=None, category_preference=None):
     if category_preference and category_preference not in VALID_CATEGORIES:
-        print(f"⚠️ Invalid category: {category_preference}")
+        print(f"Invalid category: {category_preference}")
         return [("Category error", city_preference or "Unknown", f"Category '{category_preference}' is not recognized.")]
 
     results = query_local_database(city_preference, category_preference)
 
     if results:
-        print(f"✅ Data fetched from database: {city_preference} / {category_preference}")
+        print(f"Data fetched from database: {city_preference} / {category_preference}")
     else:
-        print("🌐 Not found in database, fetching from API...")
+        print("Not found in database, fetching from API...")
         fetch_from_opentripmap(city_preference, category_preference)
         results = query_local_database(city_preference, category_preference)
 

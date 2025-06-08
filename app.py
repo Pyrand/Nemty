@@ -35,7 +35,6 @@ def chat():
             "content": (
                 "You are a helpful and concise travel assistant. "
                 "The user may describe their vacation preferences in any language. "
-                "You must always translate city names into English before using them in function calls or database lookups."
                 "Always extract both 'from_city' (departure city) and 'city_preference' (destination). These must be present in every call to the 'get_recommended_places' function. If they are not obvious, ask the user or make a reasonable guess."
                 "You must always translate city names like from_city and city_preference into English before passing them to any function call or database query."
                 "Your responses to the user must always remain in the same language the user used. "
@@ -142,10 +141,8 @@ def api_register():
     password = data.get("password")
     email = data.get("email")
     phone = data.get("phone")
-
+    
     success, msg = register_user(username, password, email, phone)
-    if success:
-        session["user"] = username
     return jsonify({"success": success, "message": msg})
 
 @app.route("/api/login", methods=["POST"])
@@ -154,6 +151,7 @@ def api_login():
     username = data.get("username")
     password = data.get("password")
     success, msg = login_user(username, password)
+    
     if success:
         session["user"] = username
     return jsonify({"success": success, "message": msg})
