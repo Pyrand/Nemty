@@ -1,11 +1,10 @@
 import sqlite3
 from flask import Flask, render_template, request, jsonify, session
 from flask_session import Session
-import os
 from dotenv import load_dotenv
-from modules.helpers import print_error, save_message, load_user_history
-from modules.database import query_local_database, fetch_from_opentripmap, get_recommended_places
-from modules.ai_tools import client, create_completion
+from modules.helpers import save_message, load_user_history
+from modules.database import get_recommended_places
+from modules.ai_tools import create_completion
 from modules.flights import get_flights_by_cities
 from modules.hotels import get_hotels_by_city, extract_guests_from_message
 from modules.auth import register_user, login_user

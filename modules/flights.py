@@ -72,18 +72,8 @@ def get_flights_by_cities(from_city, to_city):
             part = response.json().get("departures", [])
             flights.extend(part)
 
-    
-    for f in flights:
-        try:
-            flight_number = f.get("number", "N/A")
-            dep = f.get("departure", {}).get("airport", {}).get("name", "None")
-            arr = f.get("arrival", {}).get("airport", {}).get("name", "None")
-            arr_icao = f.get("arrival", {}).get("airport", {}).get("icao", "None")
-        except Exception as e:
-            print(f"[Flight log error] {e}")
 
     filtered = []
-    
     for f in flights:
         arrival_icao = f.get("arrival", {}).get("airport", {}).get("icao", "").lower()
         arrival_city = f.get("arrival", {}).get("airport", {}).get("municipalityName", "").lower()

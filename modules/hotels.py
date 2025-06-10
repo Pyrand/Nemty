@@ -216,15 +216,19 @@ def extract_guests_from_message(user_message):
 
 def get_hotels_by_city(city_name, adults=1, children=0):
     print(f"[DEBUG] Searching hotels: {city_name}, adults: {adults}, children: {children}")
+    
     city_name_eng = translate_city_name(city_name)
     if not city_name_eng or not city_name_eng.strip():
         return get_mock_hotels_by_city(city_name)
+    
     geocode = get_city_geocode(city_name_eng)
     if not geocode or not geocode["latitude"] or not geocode["longitude"]:
         return get_mock_hotels_by_city(city_name)
+    
     hotel_ids = search_hotels_by_geocode(geocode["latitude"], geocode["longitude"])
     if not hotel_ids:
         return get_mock_hotels_by_city(city_name)
+    
     hotel_offers = get_hotel_offers(hotel_ids, adults=adults, children=children)
     if hotel_offers:
         return hotel_offers
